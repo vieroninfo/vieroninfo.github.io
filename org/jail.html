@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-21 Mon 17:24 -->
+<!-- 2024-10-21 Mon 17:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>FreeBSD This Jails using OpenZFS Snapshots</title>
@@ -201,15 +201,15 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgffe0859">1. Creating a Thin Jail Using OpenZFS Snapshots</a></li>
+<li><a href="#org7f06e3b">1. Creating a Thin Jail Using OpenZFS Snapshots</a></li>
 </ul>
 </div>
 </div>
 
 
 
-<div id="outline-container-orgffe0859" class="outline-2">
-<h2 id="orgffe0859"><span class="section-number-2">1.</span> Creating a Thin Jail Using OpenZFS Snapshots</h2>
+<div id="outline-container-org7f06e3b" class="outline-2">
+<h2 id="org7f06e3b"><span class="section-number-2">1.</span> Creating a Thin Jail Using OpenZFS Snapshots</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://docs.freebsd.org/en/books/handbook/jails/#host-configuration-jail-utility">https://docs.freebsd.org/en/books/handbook/jails/#host-configuration-jail-utility</a>
@@ -219,7 +219,7 @@
 <p>
 Start all configured jails at system boot:
 </p>
-<pre class="example" id="org378ee84">
+<pre class="example" id="org15f4914">
 # sysrc jail_enable="YES"
 # sysrc jail_parallel_start="YES"
 </pre>
@@ -228,7 +228,7 @@ Start all configured jails at system boot:
 <p>
 Create datasets for the jail directories:
 </p>
-<pre class="example" id="org580117f">
+<pre class="example" id="org0ee7ce1">
 # zfs create -o mountpoint=/usr/local/jails zroot/jails
 # zfs create zroot/jails/media
 # zfs create zroot/jails/templates
@@ -238,7 +238,7 @@ Create datasets for the jail directories:
 <p>
 Fetch and patch base, then create snapshot for future clones
 </p>
-<pre class="example" id="org97e3345">
+<pre class="example" id="orgb772ac7">
 # fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
 # tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
 # freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
@@ -248,14 +248,14 @@ Fetch and patch base, then create snapshot for future clones
 <p>
 Clone from snapshot
 </p>
-<pre class="example" id="org76356fd">
+<pre class="example" id="orgf132ea4">
 # zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/squid
 </pre>
 
 <p>
 Copy essential configuration files
 </p>
-<pre class="example" id="orge435376">
+<pre class="example" id="org7ad9ec0">
 # cp /etc/resolv.conf /usr/local/jails/containers/squid/etc/resolv.conf
 # cp /etc/localtime /usr/local/jails/containers/squid/etc/localtime
 </pre>
@@ -264,7 +264,7 @@ Copy essential configuration files
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2024-10-21 Mon 17:24</p>
+<p class="date">Created: 2024-10-21 Mon 17:25</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
