@@ -1,5 +1,5 @@
 
-#+TITLE: FreeBSD This Jails using OpenZFS Snapshots
+#+TITLE: FreeBSD Thin Jails using OpenZFS Snapshots
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
