@@ -8,29 +8,39 @@
 
 * Creating a Thin Jail Using OpenZFS Snapshots
 
-https://docs.freebsd.org/en/books/handbook/jails/
-
 https://docs.freebsd.org/en/books/handbook/jails/#host-configuration-jail-utility
 
 
+Start all configured jails at system boot:
 #+begin_example
 # sysrc jail_enable="YES"
 # sysrc jail_parallel_start="YES"
 #+end_example
 
 
-Create template
+Create datasets for the jail directories:
 #+begin_example
-fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
-tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
-freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
-zfs snapshot zroot/jails/templates/13.2-RELEASE@base
+# zfs create -o mountpoint=/usr/local/jails zroot/jails
+# zfs create zroot/jails/media
+# zfs create zroot/jails/templates
+# zfs create zroot/jails/containers
 #+end_example
 
-Create clone
+Fetch and patch base, then create snapshot for future clones
+#+begin_example
+# fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
+# tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
+# freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
+# zfs snapshot zroot/jails/templates/13.2-RELEASE@base
+#+end_example
+
+Clone from snapshot
 #+begin_example
 zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/squid
-zfs snapshot zroot/jails/containers/squid@newclone
+#+end_example
+
+Copy essential configuration files
+#+begin_example
 cp /etc/resolv.conf /usr/local/jails/containers/squid/etc/resolv.conf
 cp /etc/localtime /usr/local/jails/containers/squid/etc/localtime
 #+end_example
