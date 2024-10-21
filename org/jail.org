@@ -1,0 +1,32 @@
+
+#+TITLE: FreeBSD This Jails using OpenZFS Snapshots
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+
+
+* Creating a Thin Jail Using OpenZFS Snapshots
+
+https://docs.freebsd.org/en/books/handbook/jails/
+
+https://docs.freebsd.org/en/books/handbook/jails/#host-configuration-jail-utility
+
+
+#+begin_example
+# sysrc jail_enable="YES"
+# sysrc jail_parallel_start="YES"
+#+end_example
+
+
+# template
+#fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
+#tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
+#freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
+# zfs snapshot zroot/jails/templates/13.2-RELEASE@base
+
+# clone
+#zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/squid
+#zfs snapshot zroot/jails/containers/squid@newclone
+#cp /etc/resolv.conf /usr/local/jails/containers/squid/etc/resolv.conf
+#cp /etc/localtime /usr/local/jails/containers/squid/etc/localtime
