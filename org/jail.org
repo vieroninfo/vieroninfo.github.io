@@ -19,14 +19,18 @@ https://docs.freebsd.org/en/books/handbook/jails/#host-configuration-jail-utilit
 #+end_example
 
 
-# template
-#fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
-#tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
-#freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
-# zfs snapshot zroot/jails/templates/13.2-RELEASE@base
+Create template
+#+begin_example
+fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
+tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
+freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
+zfs snapshot zroot/jails/templates/13.2-RELEASE@base
+#+end_example
 
-# clone
-#zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/squid
-#zfs snapshot zroot/jails/containers/squid@newclone
-#cp /etc/resolv.conf /usr/local/jails/containers/squid/etc/resolv.conf
-#cp /etc/localtime /usr/local/jails/containers/squid/etc/localtime
+Create clone
+#+begin_example
+zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/squid
+zfs snapshot zroot/jails/containers/squid@newclone
+cp /etc/resolv.conf /usr/local/jails/containers/squid/etc/resolv.conf
+cp /etc/localtime /usr/local/jails/containers/squid/etc/localtime
+#+end_example
