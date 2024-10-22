@@ -39,7 +39,7 @@ Clone from snapshot
 # zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/thinjail
 #+end_example
 
-Copy essential configuration files
+Copy essential configuration files (OPTIONAL)
 #+begin_example
 # cp /etc/resolv.conf /usr/local/jails/containers/thinjail/etc/resolv.conf
 # cp /etc/localtime /usr/local/jails/containers/thinjail/etc/localtime
