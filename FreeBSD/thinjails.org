@@ -56,3 +56,26 @@ Start the jail:
 #+begin_example
 # service jail start thinjail
 #+end_example
+
+* Jail Upgrading
+
+https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading
+
+Upgrade jail to latest patch release:
+#+begin_example
+# freebsd-update -j thinjail fetch install
+# service jail restart thinjail
+#+end_example
+
+Upgrade jail to new major or minor release:
+
+1. First upgrade and reboot Host
+
+2. then upgrade jail:
+#+begin_example
+# freebsd-update -j thinjail -r 13.2-RELEASE upgrade
+# freebsd-update -j thinjail install
+# service jail restart thinjail
+# freebsd-update -j thinjail install
+# service jail restart thinjail
+#+end_example
