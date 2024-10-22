@@ -27,6 +27,7 @@ Create datasets for the jail directories:
 # zfs create zroot/jails/containers
 #+end_example
 
+** Create template jail "ZFS snapshot"
 Fetch and patch base, then create snapshot for future clones
 #+begin_example
 # fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
@@ -35,6 +36,7 @@ Fetch and patch base, then create snapshot for future clones
 # zfs snapshot zroot/jails/templates/13.2-RELEASE@base
 #+end_example
 
+** Create new jail "ZFS clone" from template
 Clone from snapshot
 #+begin_example
 # zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/thinjail
