@@ -1,5 +1,6 @@
 
 #+TITLE: FreeBSD Thin Jails using OpenZFS Snapshots
+#+SUBTITLE: WARNING: the following are my personal github notes. Use at your own risk!
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
