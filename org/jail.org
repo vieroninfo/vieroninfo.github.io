@@ -8,7 +8,7 @@
 
 * Creating a Thin Jail Using OpenZFS Snapshots
 
-https://docs.freebsd.org/en/books/handbook/jails/#host-configuration-jail-utility
+https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots
 
 
 Start all configured jails at system boot:
@@ -36,13 +36,22 @@ Fetch and patch base, then create snapshot for future clones
 
 Clone from snapshot
 #+begin_example
-# zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/squid
+# zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/thinjail
 #+end_example
 
 Copy essential configuration files
 #+begin_example
-# cp /etc/resolv.conf /usr/local/jails/containers/squid/etc/resolv.conf
-# cp /etc/localtime /usr/local/jails/containers/squid/etc/localtime
+# cp /etc/resolv.conf /usr/local/jails/containers/thinjail/etc/resolv.conf
+# cp /etc/localtime /usr/local/jails/containers/thinjail/etc/localtime
 #+end_example
 
+Create a jail configuration file for the newly created jail in /etc/jail.conf.d:
+#+begin_example
+# ls /etc/jail.conf.d/
+thinjail.conf
+#+end_example
 
+Start the jail:
+#+begin_example
+# service jail start thinjail
+#+end_example
