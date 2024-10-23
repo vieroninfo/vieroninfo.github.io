@@ -1,0 +1,47 @@
+
+#+TITLE: Poudriere repo in jail
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+Create jail mountpoint from FreeBSD Host (or inside jail):
+#+begin_example
+mkdir -p /usr/jails/www/var/ports/packages/
+#+end_example
+
+Create jail fstab file on FreeBSD Host:
+#+begin_example
+# cat /etc/fstab.www
+/usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
+#+end_example
+
+Add following option to jail configuration under /etc/jail.conf.d:
+#+begin_example
+# grep  fstab www.conf
+  mount.fstab = "/etc/fstab.www";
+#+end_example
+
+
+Use poudriere mounted repository inside jail:
+#+begin_example
+mkdir -p /usr/local/etc/pkg/repos
+
+root@www:/usr/local/etc/pkg/repos # cat www.conf
+proxy: {
+  url : "file:///var/ports/packages",
+  enable : yes,
+  signature_type : NONE,
+  mirror_type : NONE
+}
+
+FreeBSD: {
+  enabled: no
+}
+root@www:/usr/local/etc/pkg/repos #
+
+pkg update
+root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
+
+#+end_example
+
+
