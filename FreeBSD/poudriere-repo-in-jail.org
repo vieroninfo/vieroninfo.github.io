@@ -1,5 +1,5 @@
 
-#+TITLE: Poudriere repo in jail
+#+TITLE: Use FreeBSD Host poudriere repositories inside a jail
 #+SUBTITLE: WARNING: the following are my personal notes. Use at your own risk!
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 

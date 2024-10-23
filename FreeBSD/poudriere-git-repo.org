@@ -1,4 +1,4 @@
-#+TITLE: FreeBSD Poudriere git repository
+#+TITLE: Create poudriere git based repositories
 #+SUBTITLE: WARNING: the following are my personal notes. Use at your own risk!
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
