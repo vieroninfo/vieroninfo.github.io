@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-23 Wed 17:34 -->
+<!-- 2024-10-23 Wed 17:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Poudriere repo in jail</title>
+<title>Use FreeBSD Host poudriere repositories inside a jail</title>
 <meta name="author" content="https://vieron.info" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -196,21 +196,21 @@
 </head>
 <body>
 <div id="content" class="content">
-<h1 class="title">Poudriere repo in jail
+<h1 class="title">Use FreeBSD Host poudriere repositories inside a jail
 <br />
 <span class="subtitle">WARNING: the following are my personal notes. Use at your own risk!</span>
 </h1>
 <p>
 Create jail mountpoint from FreeBSD Host (or inside jail):
 </p>
-<pre class="example" id="orge6ea884">
+<pre class="example" id="org759273a">
 mkdir -p /usr/jails/www/var/ports/packages/
 </pre>
 
 <p>
 Create jail fstab file on FreeBSD Host:
 </p>
-<pre class="example" id="orgaca2aee">
+<pre class="example" id="orga77915d">
 # cat /etc/fstab.www
 /usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
 </pre>
@@ -218,7 +218,7 @@ Create jail fstab file on FreeBSD Host:
 <p>
 Add following option to jail configuration under /etc/jail.conf.d:
 </p>
-<pre class="example" id="org3e75658">
+<pre class="example" id="org32efedf">
 # grep  fstab www.conf
   mount.fstab = "/etc/fstab.www";
 </pre>
@@ -227,7 +227,7 @@ Add following option to jail configuration under /etc/jail.conf.d:
 <p>
 Use poudriere mounted repository inside jail:
 </p>
-<pre class="example" id="orgfb64581">
+<pre class="example" id="org469fb6e">
 mkdir -p /usr/local/etc/pkg/repos
 
 root@www:/usr/local/etc/pkg/repos # cat www.conf
@@ -250,7 +250,7 @@ root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2024-10-23 Wed 17:34</p>
+<p class="date">Created: 2024-10-23 Wed 17:43</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
