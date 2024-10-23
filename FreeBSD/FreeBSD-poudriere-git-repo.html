@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-23 Wed 15:15 -->
+<!-- 2024-10-23 Wed 16:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>FreeBSD Poudriere git repository</title>
@@ -204,30 +204,27 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9e183ac">1. Install and configure Poudriere</a></li>
-<li><a href="#org077677d">2. Building with Poudriere</a>
+<li><a href="#org8f95182">1. Install and configure Poudriere</a></li>
+<li><a href="#org4b9f221">2. Building with Poudriere</a>
 <ul>
-<li><a href="#org000f34a">2.1. Set git proxy (OPTIONAL)</a></li>
-<li><a href="#org6fc1fcf">2.2. Clone a repository</a></li>
-<li><a href="#org0ea0e4b">2.3. Create poudriere locally managed port tree</a></li>
-<li><a href="#orgefa8ab1">2.4. Update git repo</a></li>
-<li><a href="#orgcd577a9">2.5. Create poudriere jail</a></li>
-<li><a href="#orge49af59">2.6. Build with poudriere</a></li>
+<li><a href="#org19c9c63">2.1. Set git proxy (OPTIONAL)</a></li>
+<li><a href="#org9dea066">2.2. Clone a repository</a></li>
+<li><a href="#org6d50c4a">2.3. Create poudriere locally managed port tree</a></li>
+<li><a href="#org7d40749">2.4. Update git repo</a></li>
+<li><a href="#org62c63e0">2.5. Create poudriere jail</a></li>
+<li><a href="#org4c22ddf">2.6. Build with poudriere</a></li>
 </ul>
 </li>
-<li><a href="#orgbbc7411">3. Build routine</a>
+<li><a href="#org1d39e9f">3. Build routine</a>
 <ul>
-<li><a href="#org822e5b2">3.1. Keep packages updated</a></li>
-<li><a href="#org48bda31">3.2. Configure OPTIONS before building (OPTIONAL)</a></li>
-<li><a href="#org4da04cf">3.3. Cleanup old or unwanted packages (OPTIONAL)</a></li>
+<li><a href="#org36985ff">3.1. Keep packages updated</a></li>
+<li><a href="#orgbfd5e25">3.2. Configure OPTIONS before building (OPTIONAL)</a></li>
+<li><a href="#org6a9b416">3.3. Cleanup old or unwanted packages (OPTIONAL)</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<p>
-#+HTML_LINK_UP
-</p>
 
 
 
@@ -235,8 +232,8 @@
 
 
 
-<div id="outline-container-org9e183ac" class="outline-2">
-<h2 id="org9e183ac"><span class="section-number-2">1.</span> Install and configure Poudriere</h2>
+<div id="outline-container-org8f95182" class="outline-2">
+<h2 id="org8f95182"><span class="section-number-2">1.</span> Install and configure Poudriere</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere">https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere</a>
@@ -261,46 +258,46 @@ To enable ccache uncomment <code>"#CCACHE_DIR=/var/cache/ccache"</code>
 </div>
 
 
-<div id="outline-container-org077677d" class="outline-2">
-<h2 id="org077677d"><span class="section-number-2">2.</span> Building with Poudriere</h2>
+<div id="outline-container-org4b9f221" class="outline-2">
+<h2 id="org4b9f221"><span class="section-number-2">2.</span> Building with Poudriere</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org000f34a" class="outline-3">
-<h3 id="org000f34a"><span class="section-number-3">2.1.</span> Set git proxy (OPTIONAL)</h3>
+<div id="outline-container-org19c9c63" class="outline-3">
+<h3 id="org19c9c63"><span class="section-number-3">2.1.</span> Set git proxy (OPTIONAL)</h3>
 <div class="outline-text-3" id="text-2-1">
-<pre class="example" id="org9fdbc14">
+<pre class="example" id="org168aff5">
 # git config --global https.proxy http://localhost:8080
 # git config --global http.proxy http://localhost:8080
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org6fc1fcf" class="outline-3">
-<h3 id="org6fc1fcf"><span class="section-number-3">2.2.</span> Clone a repository</h3>
+<div id="outline-container-org9dea066" class="outline-3">
+<h3 id="org9dea066"><span class="section-number-3">2.2.</span> Clone a repository</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <a href="https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods">https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods</a>
 </p>
 
-<pre class="example" id="orgf2afd1d">
+<pre class="example" id="org63673d4">
 # git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/local/poudriere/ports/local/
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org0ea0e4b" class="outline-3">
-<h3 id="org0ea0e4b"><span class="section-number-3">2.3.</span> Create poudriere locally managed port tree</h3>
+<div id="outline-container-org6d50c4a" class="outline-3">
+<h3 id="org6d50c4a"><span class="section-number-3">2.3.</span> Create poudriere locally managed port tree</h3>
 <div class="outline-text-3" id="text-2-3">
-<pre class="example" id="org5453a5d">
+<pre class="example" id="org2bcef2b">
 # poudriere ports -c -p local -m null -M /usr/local/poudriere/ports/local/
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgefa8ab1" class="outline-3">
-<h3 id="orgefa8ab1"><span class="section-number-3">2.4.</span> Update git repo</h3>
+<div id="outline-container-org7d40749" class="outline-3">
+<h3 id="org7d40749"><span class="section-number-3">2.4.</span> Update git repo</h3>
 <div class="outline-text-3" id="text-2-4">
-<pre class="example" id="orgb79b3b0">
+<pre class="example" id="orga40cedf">
 # cd /usr/local/poudriere/ports/local
 # git pull
 </pre>
@@ -308,21 +305,21 @@ To enable ccache uncomment <code>"#CCACHE_DIR=/var/cache/ccache"</code>
 </div>
 
 
-<div id="outline-container-orgcd577a9" class="outline-3">
-<h3 id="orgcd577a9"><span class="section-number-3">2.5.</span> Create poudriere jail</h3>
+<div id="outline-container-org62c63e0" class="outline-3">
+<h3 id="org62c63e0"><span class="section-number-3">2.5.</span> Create poudriere jail</h3>
 <div class="outline-text-3" id="text-2-5">
-<pre class="example" id="org6b71b03">
+<pre class="example" id="orgf99ec29">
 # poudriere jail -c -j 13amd64 -v 13.3-RELEASE
 </pre>
 </div>
 </div>
-<div id="outline-container-orge49af59" class="outline-3">
-<h3 id="orge49af59"><span class="section-number-3">2.6.</span> Build with poudriere</h3>
+<div id="outline-container-org4c22ddf" class="outline-3">
+<h3 id="org4c22ddf"><span class="section-number-3">2.6.</span> Build with poudriere</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Create a list of currently installed prime-origins:
 </p>
-<pre class="example" id="orgb5ebfea">
+<pre class="example" id="orgebc1989">
 pkg info -o `pkg prime-list` | awk '{print $2}' | sort &gt; pkg-info-`date +%Y%m%d%H%M`
 </pre>
 
@@ -333,7 +330,7 @@ or
 <p>
 Create a list of all currently installed packages:
 </p>
-<pre class="example" id="org6a4077a">
+<pre class="example" id="orgebf1b5c">
 pkg info -o '*' | awk '{print $2}' | sort &gt; pkg-info-`date +%Y%m%d%H%M`
 </pre>
 
@@ -342,7 +339,7 @@ pkg info -o '*' | awk '{print $2}' | sort &gt; pkg-info-`date +%Y%m%d%H%M`
 <p>
 Build packages
 </p>
-<pre class="example" id="org720a780">
+<pre class="example" id="org3288032">
 poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
 </pre>
 </div>
@@ -350,17 +347,17 @@ poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
 </div>
 
 
-<div id="outline-container-orgbbc7411" class="outline-2">
-<h2 id="orgbbc7411"><span class="section-number-2">3.</span> Build routine</h2>
+<div id="outline-container-org1d39e9f" class="outline-2">
+<h2 id="org1d39e9f"><span class="section-number-2">3.</span> Build routine</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org822e5b2" class="outline-3">
-<h3 id="org822e5b2"><span class="section-number-3">3.1.</span> Keep packages updated</h3>
+<div id="outline-container-org36985ff" class="outline-3">
+<h3 id="org36985ff"><span class="section-number-3">3.1.</span> Keep packages updated</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Update git repo
 </p>
-<pre class="example" id="orge46eabb">
+<pre class="example" id="org422f8d6">
 # cd /usr/local/poudriere/ports/local
 # git pull
 </pre>
@@ -368,27 +365,27 @@ Update git repo
 <p>
 Build packages
 </p>
-<pre class="example" id="org7dc2649">
+<pre class="example" id="org734f784">
 poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
 </pre>
 </div>
 </div>
 
 
-<div id="outline-container-org48bda31" class="outline-3">
-<h3 id="org48bda31"><span class="section-number-3">3.2.</span> Configure OPTIONS before building (OPTIONAL)</h3>
+<div id="outline-container-orgbfd5e25" class="outline-3">
+<h3 id="orgbfd5e25"><span class="section-number-3">3.2.</span> Configure OPTIONS before building (OPTIONAL)</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Configure options
 </p>
-<pre class="example" id="orgee1ab46">
+<pre class="example" id="org4508c6f">
 poudriere options -j 13amd64-local -p local -f filename -c
 </pre>
 
 <p>
 Remove options
 </p>
-<pre class="example" id="orga692877">
+<pre class="example" id="orgee00387">
 poudriere options -j 13amd64-local -p local -r -f filename
 </pre>
 
@@ -396,19 +393,19 @@ poudriere options -j 13amd64-local -p local -r -f filename
 <p>
 Show options non recursively
 </p>
-<pre class="example" id="org60b1764">
+<pre class="example" id="org36ef3ed">
 poudriere options -j 13amd64-local -p local -s -f filename -n
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org4da04cf" class="outline-3">
-<h3 id="org4da04cf"><span class="section-number-3">3.3.</span> Cleanup old or unwanted packages (OPTIONAL)</h3>
+<div id="outline-container-org6a9b416" class="outline-3">
+<h3 id="org6a9b416"><span class="section-number-3">3.3.</span> Cleanup old or unwanted packages (OPTIONAL)</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Clean all packages
 </p>
-<pre class="example" id="orgc6fc2c2">
+<pre class="example" id="orgb40cf6c">
 poudriere pkgclean -A -j 13amd64-local -p local
 </pre>
 </div>
@@ -417,7 +414,7 @@ poudriere pkgclean -A -j 13amd64-local -p local
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2024-10-23 Wed 15:15</p>
+<p class="date">Created: 2024-10-23 Wed 16:15</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
