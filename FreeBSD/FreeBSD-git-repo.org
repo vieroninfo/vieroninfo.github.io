@@ -1,4 +1,5 @@
 #+TITLE: FreeBSD Poudriere git repository
+#+SUBTITLE: WARNING: the following are my personal notes. Use at your own risk!
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
