@@ -3,16 +3,14 @@
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
 
-* Resources
 
-https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods
 
-https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere
+
 
 
 
 * Install and configure Poudriere
-
+https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere
 
 Install Poudriere using the /ports-mgmt/poudriere/ package or port and /devel/ccache/ to use ccache to speed up the build process.
 
@@ -32,6 +30,9 @@ To enable ccache uncomment ~"#CCACHE_DIR=/var/cache/ccache"~
 #+end_example
 
 ** Clone a repository
+
+https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods
+
 #+begin_example
 # git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/local/poudriere/ports/local/
 #+end_example
