@@ -1,0 +1,120 @@
+#+TITLE: FreeBSD Poudriere git repository
+#+SUBTITLE: WARNING: the following are my personal notes. Use at your own risk!
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+
+
+
+
+
+
+* Install and configure Poudriere
+https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere
+
+Install Poudriere using the /ports-mgmt/poudriere/ package or port and /devel/ccache/ to use ccache to speed up the build process.
+
+Poudriere configuration file:  ~/usr/local/etc/poudriere.conf~
+
+For ZFS, uncomment ~"#ZPOOL=zroot"~
+
+To enable ccache uncomment ~"#CCACHE_DIR=/var/cache/ccache"~
+
+
+* Building with Poudriere
+
+** Set git proxy (OPTIONAL)
+#+begin_example
+# git config --global https.proxy http://localhost:8080
+# git config --global http.proxy http://localhost:8080
+#+end_example
+
+** Clone a repository
+
+https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods
+
+#+begin_example
+# git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/local/poudriere/ports/local/
+#+end_example
+
+** Create poudriere locally managed port tree
+
+#+begin_example
+# poudriere ports -c -p local -m null -M /usr/local/poudriere/ports/local/
+#+end_example
+
+** Update git repo
+#+begin_example
+# cd /usr/local/poudriere/ports/local
+# git pull
+#+end_example
+
+
+** Create poudriere jail
+#+begin_example
+# poudriere jail -c -j 13amd64 -v 13.3-RELEASE
+#+end_example
+** Build with poudriere
+
+Create a list of currently installed prime-origins:
+#+begin_example
+pkg info -o `pkg prime-list` | awk '{print $2}' | sort > pkg-info-`date +%Y%m%d%H%M`
+#+end_example
+
+or
+
+Create a list of all currently installed packages:
+#+begin_example
+pkg info -o '*' | awk '{print $2}' | sort > pkg-info-`date +%Y%m%d%H%M`
+#+end_example
+
+
+
+Build packages
+#+begin_example
+poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
+#+end_example
+
+
+* Build routine
+
+** Keep packages updated
+
+
+Update git repo
+#+begin_example
+# cd /usr/local/poudriere/ports/local
+# git pull
+#+end_example
+
+Build packages
+#+begin_example
+poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
+#+end_example
+
+
+** Configure OPTIONS before building (OPTIONAL)
+
+Configure options
+#+begin_example
+poudriere options -j 13amd64-local -p local -f filename -c
+#+end_example
+
+Remove options
+#+begin_example
+poudriere options -j 13amd64-local -p local -r -f filename
+#+end_example
+
+
+Show options non recursively
+#+begin_example
+poudriere options -j 13amd64-local -p local -s -f filename -n
+#+end_example
+
+** Cleanup old or unwanted packages (OPTIONAL)
+
+Clean all packages
+#+begin_example
+poudriere pkgclean -A -j 13amd64-local -p local
+#+end_example
