@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-23 Wed 17:43 -->
+<!-- 2024-10-28 Mon 12:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Use FreeBSD Host poudriere repositories inside a jail</title>
@@ -193,6 +193,7 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
+<base target="_blank">
 </head>
 <body>
 <div id="content" class="content">
@@ -203,14 +204,14 @@
 <p>
 Create jail mountpoint from FreeBSD Host (or inside jail):
 </p>
-<pre class="example" id="org759273a">
+<pre class="example" id="orgafb087f">
 mkdir -p /usr/jails/www/var/ports/packages/
 </pre>
 
 <p>
 Create jail fstab file on FreeBSD Host:
 </p>
-<pre class="example" id="orga77915d">
+<pre class="example" id="org2f74c24">
 # cat /etc/fstab.www
 /usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
 </pre>
@@ -218,7 +219,7 @@ Create jail fstab file on FreeBSD Host:
 <p>
 Add following option to jail configuration under /etc/jail.conf.d:
 </p>
-<pre class="example" id="org32efedf">
+<pre class="example" id="org55ac754">
 # grep  fstab www.conf
   mount.fstab = "/etc/fstab.www";
 </pre>
@@ -227,7 +228,7 @@ Add following option to jail configuration under /etc/jail.conf.d:
 <p>
 Use poudriere mounted repository inside jail:
 </p>
-<pre class="example" id="org469fb6e">
+<pre class="example" id="org338124c">
 mkdir -p /usr/local/etc/pkg/repos
 
 root@www:/usr/local/etc/pkg/repos # cat www.conf
@@ -250,7 +251,7 @@ root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2024-10-23 Wed 17:43</p>
+<p class="date">Created: 2024-10-28 Mon 12:55</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

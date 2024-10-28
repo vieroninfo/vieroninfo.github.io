@@ -3,6 +3,7 @@
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
+#+HTML_HEAD: <base target="_blank">
 
 
 
