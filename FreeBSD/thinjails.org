@@ -82,4 +82,3 @@ Upgrade jail to new major or minor release:
 # service jail restart thinjail
 #+end_example
 
-test
