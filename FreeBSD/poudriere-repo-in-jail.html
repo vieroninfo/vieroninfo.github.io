@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-28 Mon 12:55 -->
+<!-- 2024-11-01 Fri 23:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Use FreeBSD Host poudriere repositories inside a jail</title>
@@ -193,25 +193,37 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<base target="_blank">
+<link rel="stylesheet" type="text/css" href="../style.css" />
 </head>
 <body>
 <div id="content" class="content">
-<h1 class="title">Use FreeBSD Host poudriere repositories inside a jail
-<br />
-<span class="subtitle">WARNING: the following are my personal notes. Use at your own risk!</span>
-</h1>
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="../index.html">Home</a></li>
+    <li class="crumb">Use FreeBSD Host poudriere repositories inside a jail</li>
+  </ol>
+</nav>
+
+
+
+<p>
+<h1 style="text-align: center;">Use FreeBSD Host poudriere repositories inside a jail</h1>
+<h3 style="text-align: center;">WARNING: the following are my personal notes. Use at your own risk!</h3>
+</p>
+
+
+
 <p>
 Create jail mountpoint from FreeBSD Host (or inside jail):
 </p>
-<pre class="example" id="orgafb087f">
+<pre class="example" id="org01023c3">
 mkdir -p /usr/jails/www/var/ports/packages/
 </pre>
 
 <p>
 Create jail fstab file on FreeBSD Host:
 </p>
-<pre class="example" id="org2f74c24">
+<pre class="example" id="org031736a">
 # cat /etc/fstab.www
 /usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
 </pre>
@@ -219,7 +231,7 @@ Create jail fstab file on FreeBSD Host:
 <p>
 Add following option to jail configuration under /etc/jail.conf.d:
 </p>
-<pre class="example" id="org55ac754">
+<pre class="example" id="org875cd13">
 # grep  fstab www.conf
   mount.fstab = "/etc/fstab.www";
 </pre>
@@ -228,7 +240,7 @@ Add following option to jail configuration under /etc/jail.conf.d:
 <p>
 Use poudriere mounted repository inside jail:
 </p>
-<pre class="example" id="org338124c">
+<pre class="example" id="orgea60e1b">
 mkdir -p /usr/local/etc/pkg/repos
 
 root@www:/usr/local/etc/pkg/repos # cat www.conf
@@ -251,8 +263,7 @@ root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2024-10-28 Mon 12:55</p>
-<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2024-11-01 Fri 23:21</p>
 </div>
 </body>
 </html>

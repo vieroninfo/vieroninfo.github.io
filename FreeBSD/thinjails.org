@@ -1,16 +1,33 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../style.css" />
+
+#+begin_export html
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="../index.html">Home</a></li>
+    <li class="crumb">Create jail clones from OpenZFS snapshots</li>
+  </ol>
+</nav>
+#+end_export
+
 
 #+TITLE: Create jail clones from OpenZFS snapshots
-#+SUBTITLE: WARNING: the following are my personal notes. Use at your own risk!
+#+OPTIONS: title:nil
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
-#+HTML_HEAD: <base target="_blank">
+
+#+OPTIONS: toc:nil
+
+@@html:<h1 style="text-align: center;">@@Create jail clones from OpenZFS snapshots@@html:</h1>@@
+@@html:<h3 style="text-align: center;">@@WARNING: the following are my personal notes. Use at your own risk!@@html:</h3>@@
+
 
 
 * Creating a Thin Jail Using OpenZFS Snapshots
 
-https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots
-
+#+begin_export html
+<p><a href="https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots" target="_blank">https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots</a></p>
+#+end_export
 
 Start all configured jails at system boot:
 #+begin_example
@@ -61,7 +78,9 @@ Start the jail:
 
 * Jail Upgrading
 
-https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading
+#+begin_export html
+<p><a href="https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading" target="_blank">https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading</a></p>
+#+end_export
 
 Upgrade jail to latest patch release:
 #+begin_example
@@ -82,3 +101,4 @@ Upgrade jail to new major or minor release:
 # service jail restart thinjail
 #+end_example
 
+#+TOC: headlines N
