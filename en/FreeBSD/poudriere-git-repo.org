@@ -3,7 +3,7 @@
 #+begin_export html
 <div class="lang">
 <li><a href="thinjails.html">en</a>&nbsp;</li>
-<li> | <a href="../../it/FreeBSD/thinjails.html">it</a></li>
+<li> | <a href="/it/FreeBSD/thinjails.html">it</a></li>
 </div>
 #+end_export
 
@@ -11,7 +11,7 @@
 #+begin_export html
 <nav class="crumbs">
   <ol>
-    <li class="crumb"><a href="../../index.html">Home</a></li>
+    <li class="crumb"><a href="/index.html">Home</a></li>
     <li class="crumb">Create poudriere git based repositories</li>
   </ol>
 </nav>
