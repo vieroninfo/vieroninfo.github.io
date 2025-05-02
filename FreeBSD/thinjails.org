@@ -5,6 +5,7 @@
   <ol>
     <li class="crumb"><a href="../index.html">Home</a></li>
     <li class="crumb">Create jail clones from OpenZFS snapshots</li>
+    <li class="crumb"><a href="en/thinjails.html">en</a></li>
   </ol>
 </nav>
 #+end_export

@@ -18,14 +18,9 @@
 <p><a href="FreeBSD/poudriere-repo-in-jail.html">Use FreeBSD Host poudriere repositories inside a jail</a></p>
 #+end_export
 
-* Cool links
-
 #+begin_export html
-<p><a href="http://www.catb.org/~esr/faqs/hacker-howto.html" target="_blank">How To Become A Hacker by Eric Steven Raymond</a></p>
-<p><a href="https://linuxcommand.org/" target="_blank">The Linux Command Line by William Shotts</a></p>
-<p><a href="https://www.freebsd.org" target="_blank">The FreeBSD Project</a></p> 
-<p><a href="https://freebsdfoundation.org" target="_blank">The FreeBSD Foundation</a></p>
-<p><a href="https://www.gnu.org/gnu/thegnuproject.en.html" target="_blank">The GNU Project</a></p>
-<p><a href="https://www.feistyduck.com/books/openssl-cookbook/" target="_blank">OpenSSL Cookbook by Ivan Ristić</a></p>
+<br>
+<h2><a href="links.html">Links to my favourite online resources</a></h2>
 #+end_export
+
 
