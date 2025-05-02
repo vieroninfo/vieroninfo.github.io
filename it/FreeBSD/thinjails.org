@@ -1,9 +1,10 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/style.css" />
 
+
 #+begin_export html
 <div class="lang">
-<li> | <a href="/en/FreeBSD/thinjails.html">en</a>&nbsp;</li>
-<li><a href="thinjails.html">it</a></li>
+<li><a href="/en/FreeBSD/thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="thinjails.html">it</a></li>
 </div>
 #+end_export
 
