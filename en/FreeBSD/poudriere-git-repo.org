@@ -1,4 +1,4 @@
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../style.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/style.css" />
 
 #+begin_export html
 <div class="lang">
