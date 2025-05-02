@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-05-02 Fri 18:00 -->
+<!-- 2025-05-02 Fri 18:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Use FreeBSD Host poudriere repositories inside a jail</title>
@@ -199,7 +199,7 @@
 <div id="content" class="content">
 <div class="lang">
 <li><a href="thinjails.html">en</a>&nbsp;</li>
-<li> | <a href="/it/FreeBSD/thinjails.html">it</a></li>
+<li> | <a href="/it/FreeBSD/poudriere-repo-in-jail.html">it</a></li>
 </div>
 
 <nav class="crumbs">
@@ -221,14 +221,14 @@
 <p>
 Create jail mountpoint from FreeBSD Host (or inside jail):
 </p>
-<pre class="example" id="org42aec7d">
+<pre class="example" id="org7b37389">
 mkdir -p /usr/jails/www/var/ports/packages/
 </pre>
 
 <p>
 Create jail fstab file on FreeBSD Host:
 </p>
-<pre class="example" id="org4cb424b">
+<pre class="example" id="org43600c3">
 # cat /etc/fstab.www
 /usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
 </pre>
@@ -236,7 +236,7 @@ Create jail fstab file on FreeBSD Host:
 <p>
 Add following option to jail configuration under /etc/jail.conf.d:
 </p>
-<pre class="example" id="org9c826be">
+<pre class="example" id="orgb7f91c2">
 # grep  fstab www.conf
   mount.fstab = "/etc/fstab.www";
 </pre>
@@ -245,7 +245,7 @@ Add following option to jail configuration under /etc/jail.conf.d:
 <p>
 Use poudriere mounted repository inside jail:
 </p>
-<pre class="example" id="orgd36b01c">
+<pre class="example" id="org31dc60c">
 mkdir -p /usr/local/etc/pkg/repos
 
 root@www:/usr/local/etc/pkg/repos # cat www.conf
@@ -270,7 +270,7 @@ root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2025-05-02 Fri 18:00</p>
+<p class="date">Created: 2025-05-02 Fri 18:57</p>
 </div>
 </body>
 </html>
