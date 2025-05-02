@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-05-02 Fri 17:42 -->
+<!-- 2025-05-02 Fri 17:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Information Technology</title>
-<meta name="author" content="Aaron" />
+<title>Create jail clones from OpenZFS snapshots</title>
+<meta name="author" content="https://vieron.info" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -193,35 +193,152 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../../style.css" />
 </head>
 <body>
 <div id="content" class="content">
-<div id="outline-container-org21d0c91" class="outline-2">
-<h2 id="org21d0c91">Personal notes on FreeBSD and related technologies</h2>
-<div class="outline-text-2" id="text-org21d0c91">
-<p><a href="en/FreeBSD/thinjails.html">Create jail clones from OpenZFS snapshots</a></p>
-<p><a href="en/FreeBSD/poudriere-git-repo.html">Create poudriere git based repositories</a></p>
-<p><a href="en/FreeBSD/poudriere-repo-in-jail.html">Use FreeBSD Host poudriere repositories inside a jail</a></p>
+<div class="lang">
+<li><a href="thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="../../it/FreeBSD/thinjails.html">it</a></li>
+</div>
 
-<h2><a href="en/links.html">Links to my favourite online resources</a></h2>
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="../../index.html">Home</a></li>
+    <li class="crumb">Create jail clones from OpenZFS snapshots</li>
+  </ol>
+</nav>
 
-<br>
+
+<p>
+<h1 style="text-align: center;">Create jail clones from OpenZFS snapshots</h1>
+<h3 style="text-align: center;">WARNING: the following are my personal notes. Use at your own risk!</h3>
+</p>
+<div id="outline-container-org9c15cea" class="outline-2">
+<h2 id="org9c15cea"><span class="section-number-2">1.</span> Creating a Thin Jail Using OpenZFS Snapshots</h2>
+<div class="outline-text-2" id="text-1">
+<p><a href="https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots" target="_blank">https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots</a></p>
+
+<p>
+Start all configured jails at system boot:
+</p>
+<pre class="example" id="org45260d1">
+# sysrc jail_enable="YES"
+# sysrc jail_parallel_start="YES"
+</pre>
+
+
+<p>
+Create datasets for the jail directories:
+</p>
+<pre class="example" id="org6a76182">
+# zfs create -o mountpoint=/usr/local/jails zroot/jails
+# zfs create zroot/jails/media
+# zfs create zroot/jails/templates
+# zfs create zroot/jails/containers
+</pre>
+</div>
+<div id="outline-container-org23a7446" class="outline-3">
+<h3 id="org23a7446"><span class="section-number-3">1.1.</span> Create template jail "ZFS snapshot"</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Fetch and patch base, then create snapshot for future clones
+</p>
+<pre class="example" id="org0b3b614">
+# fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
+# tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
+# freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
+# zfs snapshot zroot/jails/templates/13.2-RELEASE@base
+</pre>
+</div>
+</div>
+<div id="outline-container-org6fc2a7b" class="outline-3">
+<h3 id="org6fc2a7b"><span class="section-number-3">1.2.</span> Create new jail "ZFS clone" from template</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Clone from snapshot
+</p>
+<pre class="example" id="org4ebc525">
+# zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/thinjail
+</pre>
+
+<p>
+Copy essential configuration files (OPTIONAL)
+</p>
+<pre class="example" id="orgd2eb4ce">
+# cp /etc/resolv.conf /usr/local/jails/containers/thinjail/etc/resolv.conf
+# cp /etc/localtime /usr/local/jails/containers/thinjail/etc/localtime
+</pre>
+
+<p>
+Create a jail configuration file for the newly created jail in /etc/jail.conf.d:
+</p>
+<pre class="example" id="org5bc563f">
+# ls /etc/jail.conf.d/
+thinjail.conf
+</pre>
+
+<p>
+Start the jail:
+</p>
+<pre class="example" id="org41efc43">
+# service jail start thinjail
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1ef08a2" class="outline-2">
+<h2 id="org1ef08a2"><span class="section-number-2">2.</span> Jail Upgrading</h2>
+<div class="outline-text-2" id="text-2">
+<p><a href="https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading" target="_blank">https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading</a></p>
+
+<p>
+Upgrade jail to latest patch release:
+</p>
+<pre class="example" id="org4446312">
+# freebsd-update -j thinjail fetch install
+# service jail restart thinjail
+</pre>
+
+<p>
+Upgrade jail to new major or minor release:
+</p>
+
+<ol class="org-ol">
+<li>First upgrade and reboot Host</li>
+
+<li>then upgrade jail:</li>
+</ol>
+<pre class="example" id="orge21b2dc">
+# freebsd-update -j thinjail -r 13.2-RELEASE upgrade
+# freebsd-update -j thinjail install
+# service jail restart thinjail
+# freebsd-update -j thinjail install
+# service jail restart thinjail
+</pre>
+
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org9c15cea">1. Creating a Thin Jail Using OpenZFS Snapshots</a>
+<ul>
+<li><a href="#org23a7446">1.1. Create template jail "ZFS snapshot"</a></li>
+<li><a href="#org6fc2a7b">1.2. Create new jail "ZFS clone" from template</a></li>
+</ul>
+</li>
+<li><a href="#org1ef08a2">2. Jail Upgrading</a></li>
+</ul>
+</div>
+</div>
+
 <hr>
-<br>
 </div>
 </div>
-<div id="outline-container-orgd18c74c" class="outline-2">
-<h2 id="orgd18c74c">Note personali su FreeBSD e tecnologie correlate</h2>
-<div class="outline-text-2" id="text-orgd18c74c">
-<p><a href="FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
-<p><a href="FreeBSD/poudriere-git-repo.html">Create repository git basate su poudriere</a></p>
-<p><a href="FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
-
-<h2><a href="links.html">Link ad alcune delle mie preferite risorse sul web</a></h2>
 </div>
-</div>
+<div id="postamble" class="status">
+<p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
+<p class="date">Created: 2025-05-02 Fri 17:51</p>
 </div>
 </body>
 </html>

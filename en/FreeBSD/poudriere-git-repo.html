@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-05-02 Fri 17:42 -->
+<!-- 2025-05-02 Fri 17:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Information Technology</title>
-<meta name="author" content="Aaron" />
+<title>Create poudriere git based repositories</title>
+<meta name="author" content="https://vieron.info" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -193,35 +193,223 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../style.css" />
 </head>
 <body>
 <div id="content" class="content">
-<div id="outline-container-org21d0c91" class="outline-2">
-<h2 id="org21d0c91">Personal notes on FreeBSD and related technologies</h2>
-<div class="outline-text-2" id="text-org21d0c91">
-<p><a href="en/FreeBSD/thinjails.html">Create jail clones from OpenZFS snapshots</a></p>
-<p><a href="en/FreeBSD/poudriere-git-repo.html">Create poudriere git based repositories</a></p>
-<p><a href="en/FreeBSD/poudriere-repo-in-jail.html">Use FreeBSD Host poudriere repositories inside a jail</a></p>
+<div class="lang">
+<li><a href="thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="../../it/FreeBSD/thinjails.html">it</a></li>
+</div>
 
-<h2><a href="en/links.html">Links to my favourite online resources</a></h2>
 
-<br>
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="../../index.html">Home</a></li>
+    <li class="crumb">Create poudriere git based repositories</li>
+  </ol>
+</nav>
+
+
+<p>
+<h1 style="text-align: center;">Create poudriere git based repositories</h1>
+<h3 style="text-align: center;">WARNING: the following are my personal notes. Use at your own risk!</h3>
+</p>
+<div id="outline-container-org861d513" class="outline-2">
+<h2 id="org861d513"><span class="section-number-2">1.</span> Install and configure Poudriere</h2>
+<div class="outline-text-2" id="text-1">
+<p><a href="https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere" target="_blank">https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere</a></p>
+
+<p>
+Install Poudriere using the <i>ports-mgmt/poudriere</i> package or port and <i>devel/ccache</i> to use ccache to speed up the build process.
+</p>
+
+<p>
+Poudriere configuration file:  <code>/usr/local/etc/poudriere.conf</code>
+</p>
+
+<p>
+For ZFS, uncomment <code>"#ZPOOL=zroot"</code>
+</p>
+
+<p>
+To enable ccache uncomment <code>"#CCACHE_DIR=/var/cache/ccache"</code>
+</p>
+</div>
+</div>
+<div id="outline-container-org2ad188a" class="outline-2">
+<h2 id="org2ad188a"><span class="section-number-2">2.</span> Building with Poudriere</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org1b343d8" class="outline-3">
+<h3 id="org1b343d8"><span class="section-number-3">2.1.</span> Set git proxy (OPTIONAL)</h3>
+<div class="outline-text-3" id="text-2-1">
+<pre class="example" id="org6e9cf16">
+# git config --global https.proxy http://localhost:8080
+# git config --global http.proxy http://localhost:8080
+</pre>
+</div>
+</div>
+<div id="outline-container-org295a801" class="outline-3">
+<h3 id="org295a801"><span class="section-number-3">2.2.</span> Clone a repository</h3>
+<div class="outline-text-3" id="text-2-2">
+<p><a href="https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods" target="_blank">https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods</a></p>
+
+<pre class="example" id="org7fe3304">
+# git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/local/poudriere/ports/local/
+</pre>
+</div>
+</div>
+<div id="outline-container-orgff631a0" class="outline-3">
+<h3 id="orgff631a0"><span class="section-number-3">2.3.</span> Create poudriere locally managed port tree</h3>
+<div class="outline-text-3" id="text-2-3">
+<pre class="example" id="orgf6a6138">
+# poudriere ports -c -p local -m null -M /usr/local/poudriere/ports/local/
+</pre>
+</div>
+</div>
+<div id="outline-container-org2e17d07" class="outline-3">
+<h3 id="org2e17d07"><span class="section-number-3">2.4.</span> Update git repo</h3>
+<div class="outline-text-3" id="text-2-4">
+<pre class="example" id="orge967158">
+# cd /usr/local/poudriere/ports/local
+# git pull
+</pre>
+</div>
+</div>
+<div id="outline-container-org122ba62" class="outline-3">
+<h3 id="org122ba62"><span class="section-number-3">2.5.</span> Create poudriere jail</h3>
+<div class="outline-text-3" id="text-2-5">
+<pre class="example" id="org424e442">
+# poudriere jail -c -j 13amd64 -v 13.3-RELEASE
+</pre>
+</div>
+</div>
+<div id="outline-container-org11dd81a" class="outline-3">
+<h3 id="org11dd81a"><span class="section-number-3">2.6.</span> Build with poudriere</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Create a list of currently installed prime-origins:
+</p>
+<pre class="example" id="orgf08b47b">
+pkg info -o `pkg prime-list` | awk '{print $2}' | sort &gt; pkg-info-`date +%Y%m%d%H%M`
+</pre>
+
+<p>
+or
+</p>
+
+<p>
+Create a list of all currently installed packages:
+</p>
+<pre class="example" id="orga4c5354">
+pkg info -o '*' | awk '{print $2}' | sort &gt; pkg-info-`date +%Y%m%d%H%M`
+</pre>
+
+
+
+<p>
+Build packages
+</p>
+<pre class="example" id="orge2d5e4b">
+poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org24ce853" class="outline-2">
+<h2 id="org24ce853"><span class="section-number-2">3.</span> Build routine</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org981cdb3" class="outline-3">
+<h3 id="org981cdb3"><span class="section-number-3">3.1.</span> Keep packages updated</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Update git repo
+</p>
+<pre class="example" id="orgd03c80f">
+# cd /usr/local/poudriere/ports/local
+# git pull
+</pre>
+
+<p>
+Build packages
+</p>
+<pre class="example" id="org7adcbc2">
+poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
+</pre>
+</div>
+</div>
+<div id="outline-container-org45c5d91" class="outline-3">
+<h3 id="org45c5d91"><span class="section-number-3">3.2.</span> Configure OPTIONS before building (OPTIONAL)</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Configure options
+</p>
+<pre class="example" id="orgc9a4440">
+poudriere options -j 13amd64-local -p local -f filename -c
+</pre>
+
+<p>
+Remove options
+</p>
+<pre class="example" id="orgb53da10">
+poudriere options -j 13amd64-local -p local -r -f filename
+</pre>
+
+
+<p>
+Show options non recursively
+</p>
+<pre class="example" id="org4267ad9">
+poudriere options -j 13amd64-local -p local -s -f filename -n
+</pre>
+</div>
+</div>
+<div id="outline-container-org6039071" class="outline-3">
+<h3 id="org6039071"><span class="section-number-3">3.3.</span> Cleanup old or unwanted packages (OPTIONAL)</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Clean all packages
+</p>
+<pre class="example" id="orgfb0ec59">
+poudriere pkgclean -A -j 13amd64-local -p local
+</pre>
+
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org861d513">1. Install and configure Poudriere</a></li>
+<li><a href="#org2ad188a">2. Building with Poudriere</a>
+<ul>
+<li><a href="#org1b343d8">2.1. Set git proxy (OPTIONAL)</a></li>
+<li><a href="#org295a801">2.2. Clone a repository</a></li>
+<li><a href="#orgff631a0">2.3. Create poudriere locally managed port tree</a></li>
+<li><a href="#org2e17d07">2.4. Update git repo</a></li>
+<li><a href="#org122ba62">2.5. Create poudriere jail</a></li>
+<li><a href="#org11dd81a">2.6. Build with poudriere</a></li>
+</ul>
+</li>
+<li><a href="#org24ce853">3. Build routine</a>
+<ul>
+<li><a href="#org981cdb3">3.1. Keep packages updated</a></li>
+<li><a href="#org45c5d91">3.2. Configure OPTIONS before building (OPTIONAL)</a></li>
+<li><a href="#org6039071">3.3. Cleanup old or unwanted packages (OPTIONAL)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
 <hr>
-<br>
 </div>
 </div>
-<div id="outline-container-orgd18c74c" class="outline-2">
-<h2 id="orgd18c74c">Note personali su FreeBSD e tecnologie correlate</h2>
-<div class="outline-text-2" id="text-orgd18c74c">
-<p><a href="FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
-<p><a href="FreeBSD/poudriere-git-repo.html">Create repository git basate su poudriere</a></p>
-<p><a href="FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
-
-<h2><a href="links.html">Link ad alcune delle mie preferite risorse sul web</a></h2>
 </div>
 </div>
+<div id="postamble" class="status">
+<p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
+<p class="date">Created: 2025-05-02 Fri 17:01</p>
 </div>
 </body>
 </html>

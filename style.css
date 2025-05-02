@@ -24,3 +24,7 @@ nav {
 display:flex;
 justify-content: right;
 }
+
+li {
+    list-style: none;
+   }

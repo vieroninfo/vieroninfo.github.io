@@ -1,14 +1,17 @@
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../style.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../style.css" />
+
+#+begin_export html
+<div class="lang">
+<li><a href="thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="/it/FreeBSD/thinjails.html">it</a></li>
+</div>
+#+end_export
 
 #+begin_export html
 <nav class="crumbs">
   <ol>
-    <li class="crumb"><a href="../index.html">Home</a></li>
+    <li class="crumb"><a href="/index.html">Home</a></li>
     <li class="crumb">Create jail clones from OpenZFS snapshots</li>
-    <div class="lang">
-    <li><a href="en/thinjails.html">en</a>&nbsp;</li>
-    <li> | <a href="en/thinjails.html">it</a></li>
-    </div>
   </ol>
 </nav>
 #+end_export
@@ -106,3 +109,7 @@ Upgrade jail to new major or minor release:
 #+end_example
 
 #+TOC: headlines N
+
+#+begin_export html
+<hr>
+#+end_export

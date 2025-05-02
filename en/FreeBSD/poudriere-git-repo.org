@@ -1,9 +1,17 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../style.css" />
 
 #+begin_export html
+<div class="lang">
+<li><a href="thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="../../it/FreeBSD/thinjails.html">it</a></li>
+</div>
+#+end_export
+
+
+#+begin_export html
 <nav class="crumbs">
   <ol>
-    <li class="crumb"><a href="../index.html">Home</a></li>
+    <li class="crumb"><a href="../../index.html">Home</a></li>
     <li class="crumb">Create poudriere git based repositories</li>
   </ol>
 </nav>
@@ -137,3 +145,7 @@ poudriere pkgclean -A -j 13amd64-local -p local
 #+end_example
 
 #+TOC: headlines N
+
+#+begin_export html
+<hr>
+#+end_export

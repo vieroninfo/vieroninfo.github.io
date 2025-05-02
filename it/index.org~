@@ -11,6 +11,14 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
 
 
+
+#+begin_export html
+<div class="lang">
+<li><a href="index.html">en</a>&nbsp;</li>
+<li> | <a href="it/index.html">it</a></li>
+</div>
+#+end_export
+
 * Personal notes on FreeBSD and related technologies
 #+begin_export html
 <p><a href="en/FreeBSD/thinjails.html">Create jail clones from OpenZFS snapshots</a></p>
@@ -19,24 +27,8 @@
 #+end_export
 
 #+begin_export html
+<br>
 <h2><a href="en/links.html">Links to my favourite online resources</a></h2>
-#+end_export
-
-#+begin_export html
-<br>
-<hr>
-<br>
-#+end_export
-
-* Note personali su FreeBSD e tecnologie correlate
-#+begin_export html
-<p><a href="FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
-<p><a href="FreeBSD/poudriere-git-repo.html">Create repository git basate su poudriere</a></p>
-<p><a href="FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
-#+end_export
-
-#+begin_export html
-<h2><a href="links.html">Link ad alcune delle mie preferite risorse sul web</a></h2>
 #+end_export
 
 
