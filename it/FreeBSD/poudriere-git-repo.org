@@ -1,0 +1,153 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/style.css" />
+
+#+begin_export html
+<div class="lang">
+<li><a href="/en/thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="thinjails.html">it</a></li>
+</div>
+#+end_export
+
+
+#+begin_export html
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="/index.html">Home</a></li>
+    <li class="crumb">Crea repository basati su git poudriere</li>
+  </ol>
+</nav>
+#+end_export
+
+
+#+TITLE: Create poudriere git based repositories
+#+OPTIONS: title:nil
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+#+OPTIONS: toc:nil
+
+@@html:<h1 style="text-align: center;">@@Crea repository basati su git poudriere@@html:</h1>@@
+@@html:<h3 style="text-align: center;">@@
+
+ATTENZIONE: i seguenti sono miei appunti personali. Usateli a vostro rischio e pericolo@@html:</h3>@@
+
+
+
+* Installa e configura Poudriere
+#+begin_export html
+<p><a href="https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere" target="_blank">https://docs.freebsd.org/en/books/handbook/ports/#ports-poudriere</a></p>
+#+end_export
+
+Installa Poudriere utilizzando il pacchetto o la port /ports-mgmt/poudriere/ e /devel/ccache/ per usare ccache e velocizzare il processo di compilazione.
+
+File di configurazione Poudriere:  ~/usr/local/etc/poudriere.conf~
+
+Per ZFS, scommentare ~"#ZPOOL=zroot"~
+
+Per abilitare ccache scommentare ~"#CCACHE_DIR=/var/cache/ccache"~
+
+
+* Buildare con Poudriere
+
+** Imposta un proxy per l'uso di git (OPZIONALE)
+#+begin_example
+# git config --global https.proxy http://localhost:8080
+# git config --global http.proxy http://localhost:8080
+#+end_example
+
+** Clona un repository
+
+#+begin_export html
+<p><a href="https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods" target="_blank">https://docs.freebsd.org/en/books/handbook/ports/#ports-using-installation-methods</a></p>
+#+end_export
+
+#+begin_example
+# git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/local/poudriere/ports/local/
+#+end_example
+
+** Crea una alberatura Poudriere localmente gestita
+
+#+begin_example
+# poudriere ports -c -p local -m null -M /usr/local/poudriere/ports/local/
+#+end_example
+
+** Aggiorna la repo git
+#+begin_example
+# cd /usr/local/poudriere/ports/local
+# git pull
+#+end_example
+
+
+** Crea una jail da usare con Poudriere
+#+begin_example
+# poudriere jail -c -j 13amd64 -v 13.3-RELEASE
+#+end_example
+** Buildare con poudriere
+
+Crea una lista di prime-origin attualmente installate:
+#+begin_example
+pkg info -o `pkg prime-list` | awk '{print $2}' | sort > pkg-info-`date +%Y%m%d%H%M`
+#+end_example
+
+oppure
+
+Crea una lista di tutti i pacchetti attualmente installati:
+#+begin_example
+pkg info -o '*' | awk '{print $2}' | sort > pkg-info-`date +%Y%m%d%H%M`
+#+end_example
+
+
+
+Fai la build dei pacchetti:
+#+begin_example
+poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
+#+end_example
+
+
+* La build routine
+
+** Mantieni i pacchetti aggiornati
+
+
+Aggiorna la repo git:
+#+begin_example
+# cd /usr/local/poudriere/ports/local
+# git pull
+#+end_example
+
+Fai la build dei pacchetti:
+#+begin_example
+poudriere bulk -j 13amd64-local -p local -f pkg-info-202410041128
+#+end_example
+
+
+** Configurare le OPZIONI prima della compilazione (FACOLTATIVO)
+
+Configura le opzioni
+#+begin_example
+poudriere options -j 13amd64-local -p local -f filename -c
+#+end_example
+
+Remuovi le opzioni
+#+begin_example
+poudriere options -j 13amd64-local -p local -r -f filename
+#+end_example
+
+
+Mostra le opzioni configurate in maniera non recursiva:
+#+begin_example
+poudriere options -j 13amd64-local -p local -s -f filename -n
+#+end_example
+
+** Pulizia dei pacchetti vecchi o indesiderati (FACOLTATIVO)
+
+Fai la clean di tutti i pacchetti:
+#+begin_example
+poudriere pkgclean -A -j 13amd64-local -p local
+#+end_example
+
+#+TOC: headlines N
+
+#+begin_export html
+<hr>
+#+end_export

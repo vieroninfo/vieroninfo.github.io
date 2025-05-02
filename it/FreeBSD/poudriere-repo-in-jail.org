@@ -1,0 +1,78 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/style.css" />
+
+#+begin_export html
+<div class="lang">
+<li><a href="/en/thinjails.html">en</a>&nbsp;</li>
+<li> | <a href="thinjails.html">it</a></li>
+</div>
+#+end_export
+
+#+begin_export html
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="/index.html">Home</a></li>
+    <li class="crumb">Utilizzare i repository poudriere dell'Host FreeBSD all'interno di una jail</li>
+  </ol>
+</nav>
+#+end_export
+
+
+
+#+TITLE: Utilizzare i repository poudriere dell'Host FreeBSD all'interno di una jail
+#+OPTIONS: title:nil
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+#+OPTIONS: toc:nil
+
+@@html:<h1 style="text-align: center;">@@Utilizzare i repository poudriere dell'Host FreeBSD all'interno di una jail@@html:</h1>@@
+@@html:<h3 style="text-align: center;">@@ATTENZIONE: i seguenti sono miei appunti personali. Usateli a vostro rischio e pericolo!@@html:</h3>@@
+
+
+
+Crea mountpoint per la jail dall'Host FreeBSD (oppure da dentro la jail):
+#+begin_example
+mkdir -p /usr/jails/www/var/ports/packages/
+#+end_example
+
+Crea file fstab per la jail sull'Host FreeBSD:
+#+begin_example
+# cat /etc/fstab.www
+/usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
+#+end_example
+
+Aggiungere la seguente opzione alla configurazione della jail in /etc/jail.conf.d:
+#+begin_example
+# grep  fstab www.conf
+  mount.fstab = "/etc/fstab.www";
+#+end_example
+
+
+Utilizzare il repository montato poudriere all'interno della prigione:
+#+begin_example
+mkdir -p /usr/local/etc/pkg/repos
+
+root@www:/usr/local/etc/pkg/repos # cat www.conf
+proxy: {
+  url : "file:///var/ports/packages",
+  enable : yes,
+  signature_type : NONE,
+  mirror_type : NONE
+}
+
+FreeBSD: {
+  enabled: no
+}
+root@www:/usr/local/etc/pkg/repos #
+
+pkg update
+root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
+
+#+end_example
+
+#+begin_export html
+<hr>
+#+end_export
+
+
