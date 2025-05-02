@@ -30,13 +30,13 @@
 
 * Note personali su FreeBSD e tecnologie correlate
 #+begin_export html
-<p><a href="FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
-<p><a href="FreeBSD/poudriere-git-repo.html">Create repository git basate su poudriere</a></p>
-<p><a href="FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
+<p><a href="it/FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
+<p><a href="it/FreeBSD/poudriere-git-repo.html">Create repository git basate su poudriere</a></p>
+<p><a href="it/FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
 #+end_export
 
 #+begin_export html
-<h2><a href="links.html">Link ad alcune delle mie preferite risorse sul web</a></h2>
+<h2><a href="it/links.html">Link ad alcune delle mie preferite risorse sul web</a></h2>
 #+end_export
 
 
