@@ -25,8 +25,8 @@
 
 #+OPTIONS: toc:nil
 
-@@html:<h1 style="text-align: center;">@@Create jail clones from OpenZFS snapshots@@html:</h1>@@
-@@html:<h3 style="text-align: center;">@@WARNING: the following are my personal notes. Use at your own risk!@@html:</h3>@@
+@@html:<h1 style="text-align: center;">@@Crea cloni di jail da snapshot OpenZFS@@html:</h1>@@
+@@html:<h3 style="text-align: center;">@@ATTENZIONE: i seguenti sono miei appunti personali. Usateli a vostro rischio e pericolo!@@html:</h3>@@
 
 
 
