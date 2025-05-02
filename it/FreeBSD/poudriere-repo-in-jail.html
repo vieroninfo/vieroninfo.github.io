@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-05-02 Fri 18:22 -->
+<!-- 2025-05-02 Fri 19:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Utilizzare i repository poudriere dell'Host FreeBSD all'interno di una jail</title>
@@ -198,7 +198,7 @@
 <body>
 <div id="content" class="content">
 <div class="lang">
-<li><a href="/en/thinjails.html">en</a>&nbsp;</li>
+<li><a href="/en/FreeBSD/thinjails.html">en</a>&nbsp;</li>
 <li> | <a href="thinjails.html">it</a></li>
 </div>
 
@@ -221,14 +221,14 @@
 <p>
 Crea mountpoint per la jail dall'Host FreeBSD (oppure da dentro la jail):
 </p>
-<pre class="example" id="org961db0a">
+<pre class="example" id="org1c7c56b">
 mkdir -p /usr/jails/www/var/ports/packages/
 </pre>
 
 <p>
 Crea file fstab per la jail sull'Host FreeBSD:
 </p>
-<pre class="example" id="org3d6e59f">
+<pre class="example" id="org5d2f9ce">
 # cat /etc/fstab.www
 /usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
 </pre>
@@ -236,7 +236,7 @@ Crea file fstab per la jail sull'Host FreeBSD:
 <p>
 Aggiungere la seguente opzione alla configurazione della jail in /etc/jail.conf.d:
 </p>
-<pre class="example" id="org10b9172">
+<pre class="example" id="orgcb3ca62">
 # grep  fstab www.conf
   mount.fstab = "/etc/fstab.www";
 </pre>
@@ -245,7 +245,7 @@ Aggiungere la seguente opzione alla configurazione della jail in /etc/jail.conf.
 <p>
 Utilizzare il repository montato poudriere all'interno della prigione:
 </p>
-<pre class="example" id="org31af63a">
+<pre class="example" id="org2aa5ec3">
 mkdir -p /usr/local/etc/pkg/repos
 
 root@www:/usr/local/etc/pkg/repos # cat www.conf
@@ -270,7 +270,7 @@ root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2025-05-02 Fri 18:22</p>
+<p class="date">Created: 2025-05-02 Fri 19:01</p>
 </div>
 </body>
 </html>
