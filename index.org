@@ -27,7 +27,7 @@
 
 #+begin_export html
 <br>
-<h2><a href="en/links.html">Links to my favourite online resources</a></h2>
+<h3><a href="en/links.html">Links to my favourite online resources</a></h2>
 #+end_export
 
 #+begin_export html
@@ -52,7 +52,7 @@
 
 #+begin_export html
 <br>
-<h2><a href="it/links.html">Link ad alcune delle mie preferite risorse sul web</a></h2>
+<h3><a href="it/links.html">Link alle mie preferite risorse sul web</a></h2>
 #+end_export
 
 
