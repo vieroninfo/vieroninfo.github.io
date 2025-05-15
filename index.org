@@ -15,13 +15,13 @@
 ** Jails
 #+begin_export html
 <p><a href="en/FreeBSD/thinjails.html">Create jail clones from OpenZFS snapshots</a></p>
+<p><a href="en/FreeBSD/poudriere-repo-in-jail.html">Use poudriere repositories inside a jail</a></p>
 #+end_export
 
 ** Poudriere
 
 #+begin_export html
 <p><a href="en/FreeBSD/poudriere-git-repo.html">Create poudriere git based repositories</a></p>
-<p><a href="en/FreeBSD/poudriere-repo-in-jail.html">Use poudriere repositories inside a jail</a></p>
 #+end_export
 
 
@@ -41,12 +41,12 @@
 ** Jail
 #+begin_export html
 <p><a href="it/FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
+<p><a href="it/FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
 #+end_export
 
 ** Poudriere
 #+begin_export html
 <p><a href="it/FreeBSD/poudriere-git-repo.html">Creare repository git basate su poudriere</a></p>
-<p><a href="it/FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
 #+end_export
 
 
