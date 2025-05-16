@@ -1,0 +1,47 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/style.css" />
+
+#+begin_export html
+<div class="lang">
+<li><a href="/en/links.html">en</a>&nbsp;</li>
+<li> | <a href="links.html">it</a></li>
+</div>
+#+end_export
+
+#+begin_export html
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="/index.html">Home</a></li>
+    <li class="crumb">Link ad alcune delle mie preferite risorse sul web</li>
+  </ol>
+</nav>
+#+end_export
+
+
+#+TITLE: Link
+#+OPTIONS: title:nil
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+#+OPTIONS: toc:nil
+
+
+#+begin_export html
+<p><a href="http://www.catb.org/~esr/faqs/hacker-howto.html" target="_blank">How To Become A Hacker by Eric Steven Raymond</a></p>
+<p><a href="https://linuxcommand.org/" target="_blank">The Linux Command Line by William Shotts</a></p>
+<p><a href="https://www.gnu.org/gnu/thegnuproject.en.html" target="_blank">The GNU Project</a></p>
+<br>
+<h3>SSL/TLS related</h3>
+<p>The definitive guide to using the OpenSSL command line for configuration and testing, by Ivan Ristić:<br>
+<p><a href="https://www.feistyduck.com/books/openssl-cookbook/" target="_blank">https://www.feistyduck.com/books/openssl-cookbook/</a></p>
+Se vi interessa approfondire ulteriormente potete acquistare <a href="https://www.feistyduck.com/books/bulletproof-tls-and-pki/" target="_blank">BULLETPROOF TLS AND PKI</a> dello stesso autore.</p>
+<br>
+<h3>BSD related links</h3>
+<p>A weekly podcast and "the place to B...SD":<br>
+<p><a href="https://www.bsdnow.tv/" target="_blank">https://www.bsdnow.tv/</a></p>
+#+end_export
+
+#+begin_export html
+<hr>
+#+end_export
+
