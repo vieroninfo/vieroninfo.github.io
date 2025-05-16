@@ -1,8 +1,32 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/style.css" />
+
+
+#+begin_export html
+<div class="lang">
+<li><a href="bhyve.html">en</a>&nbsp;</li>
+<li> | <a href="/it/FreeBSD/bhyve.html">it</a></li>
+</div>
+#+end_export
+
+#+begin_export html
+<nav class="crumbs">
+  <ol>
+    <li class="crumb"><a href="/index.html">Home</a></li>
+    <li class="crumb">FreeBSD as a Host with bhyve</li>
+  </ol>
+</nav>
+#+end_export
+
+
 #+TITLE: FreeBSD as a Host with bhyve
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
+#+OPTIONS: toc:nil
 
+
+@@html:<h1 style="text-align: center;">@@FreeBSD as a Host with bhyve@@html:</h1>@@
+@@html:<h3 style="text-align: center;">@@WARNING: the following are my personal notes. Use at your own risk!@@html:</h3>@@
 
 
 ** Prepare the Host
@@ -326,3 +350,9 @@ ifconfig brnat addm tap1
 ifconfig brnat inet 10.0.0.1/24
 root@freebsd:~ #
 #+end_example
+
+
+
+#+begin_export html
+<hr>
+#+end_export
