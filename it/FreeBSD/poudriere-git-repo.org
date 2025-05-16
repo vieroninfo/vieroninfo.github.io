@@ -2,8 +2,8 @@
 
 #+begin_export html
 <div class="lang">
-<li><a href="/en/thinjails.html">en</a>&nbsp;</li>
-<li> | <a href="thinjails.html">it</a></li>
+<li><a href="/en/poudriere-git-repo.html">en</a>&nbsp;</li>
+<li> | <a href="poudriere-git-repo.html">it</a></li>
 </div>
 #+end_export
 
