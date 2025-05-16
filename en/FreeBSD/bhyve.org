@@ -1,0 +1,328 @@
+#+TITLE: FreeBSD as a Host with bhyve
+#+AUTHOR: https://vieron.info
+# Disable super/subscripting 
+#+OPTIONS: ^:nil
+
+
+
+** Prepare the Host
+
+
+[[https://docs.freebsd.org/en/books/handbook/virtualization/#virtualization-host-bhyve][23.6. FreeBSD as a Host with bhyve]]
+
+
+*** 1. Check processor support for bhyve module
+Check if the processor supports bhyve is to run dmesg or look in /var/run/dmesg.boot for the POPCNT processor feature flag on the Features2 line for AMD® processors or EPT and UG on the VT-x line for Intel® processors.
+
+#+begin_example
+root@freebsd:~ # dmesg | egrep 'EPT|UG' --color
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+  VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
+root@freebsd:~ #
+#+end_example
+
+*** 2. Load the module
+added following lines to /boot/loader.conf on FreeBSD host
+#+begin_example
+# needed for virtualization support
+vmm_load="YES"
+#+end_example
+
+to load the kernel module without rebooting issue the following command
+#+begin_example
+root@freebsd:~ # kldload vmm
+#+end_example
+
+** Configure bhyve Networking
+[[https://empt1e.blogspot.com/2016/10/bhyve-networking-options.html][Roma's Blog on bhyve Networking Options]]
+*** NAT (Option 1)
+
+Create single bridge and add a separate tap device for each Guest VMs:
+#+begin_example
+root@freebsd:~ # ifconfig bridge create name brnat up
+brnat
+root@freebsd:~ # ifconfig tap create up
+tap0
+root@freebsd:~ # ifconfig brnat addm tap0
+
+root@freebsd:~ # ifconfig brnat inet 10.0.0.1/24
+#+end_example
+
+added to /etc/pf.conf
+#+begin_example
+virt_net="10.0.0.0/24"
+set skip on brnat
+nat on $ext_if from $virt_net to any -> ($ext_if)
+#+end_example
+
+Enable ip forwarding
+#+begin_example
+root@freebsd:~ # sysctl net.inet.ip.forwarding
+net.inet.ip.forwarding: 1
+root@freebsd:~ #
+#+end_example
+
+Assign ip to bridge
+#+begin_example
+root@freebsd:~ # ifconfig brnat inet 10.0.0.1/24
+#+end_example
+
+An IP can then be assigned to the Guest VM from the 10.0.0.0/24 network and the default gw set to 10.0.0.1.
+
+
+
+
+
+*** Passthrough (Option 2)
+
+
+[[https://wiki.freebsd.org/bhyve/pci_passthru][FreeBSD Wiki - bhyve PCI Passthrough]]
+
+#+begin_example
+root@freebsd:/zroot/bhyve # pciconf -lv vmx1
+vmx1@pci0:19:0:0:       class=0x020000 rev=0x01 hdr=0x00 vendor=0x15ad device=0x07b0 subvendor=0x15ad subdevice=0x07b0
+    vendor     = 'VMware'
+    device     = 'VMXNET3 Ethernet Controller'
+    class      = network
+    subclass   = ethernet
+root@freebsd:/zroot/bhyve #
+#+end_example
+
+add following to /boot/loader.conf and reboot
+#+begin_example
+pptdevs="19/0/0"
+#+end_example
+
+add to bhyve config
+#+begin_example
+bhyve -A -H -P \
+-s 0:0,hostbridge \
+-s 1:0,lpc \
+-s 6,passthru,19/0/0 \
+-s 3:0,virtio-blk,./linux.img \
+-l com1,stdio \
+-c 4 \
+-m 2048M linux
+#+end_example
+
+
+
+
+
+
+
+
+
+** Create Guest VMs
+*** Linux Guest Creation
+
+Note: considering booting the virtual machine with UEFI instead of grub-bhyve.
+
+Create a disk image with truncate
+#+begin_example
+root@freebsd:~ # zfs create zroot/bhyve
+root@freebsd:~ # cp linux.iso /zroot/bhyve/
+root@freebsd:~ # truncate -s 16G linux.img
+#+end_example
+
+or a ZFS volume
+#+begin_example
+# zfs create -V16G -o volmode=dev zroot/linuxdisk0
+#+end_example
+
+Create a device.map that grub will use to map the virtual devices to the files on the host system:
+#+begin_example
+root@freebsd:/zroot/bhyve # cat device.map
+(hd0) ./linux.img
+(cd0) ./ubuntu-22.04.4-live-server-amd64.iso
+root@freebsd:/zroot/bhyve #
+#+end_example
+
+
+Use sysutils/grub2-bhyve to load the Linux® kernel from the ISO image:
+#+begin_example
+root@freebsd:/zroot/bhyve # grub-bhyve -m device.map -r cd0 -M 1024M linux
+#+end_example
+
+Now that the Linux® kernel is loaded, the guest can be started:
+#+begin_example
+root@freebsd:/zroot/bhyve # bhyve -A -H -P -s 0:0,hostbridge -s 1:0,lpc -s 2:0,virtio-net,tap0 -s 3:0,virtio-blk,./linux.img \
+    -s 4:0,ahci-cd,./ubuntu-22.04.4-live-server-amd64.iso -l com1,stdio -c 4 -m 1024M linux
+#+end_example
+
+The system will boot and start the installer. After installing a system in the virtual machine, reboot the virtual machine. This will cause bhyve to exit. The instance of the virtual machine needs to be destroyed before it can be started again:
+
+
+#+begin_example
+root@freebsd:~ # bhyvectl --destroy --vm=linux
+#+end_example
+
+Intermediate step
+#+begin_example
+grub> ls
+(hd0) (hd0,gpt3) (hd0,gpt2) (hd0,gpt1) (cd0) (cd0,gpt3) (cd0,gpt2) (cd0,gpt1) (host) (lvm/ubuntu--vg-ubuntu--lv)
+grub> ls (hd0,gpt2)/
+lost+found/ grub/ config-5.15.0-94-generic initrd.img.old vmlinuz.old System.map-5.15.0-94-generic vmlinuz-5.15.0-94-generic initrd.img
+vmlinuz initrd.img-5.15.0-94-generic
+grub> linux (hd0,gpt2)/vmlinuz-5.15.0-94-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv
+grub> initrd (hd0,gpt2)/initrd.img-5.15.0-94-generic
+grub>
+#+end_example
+
+
+Boot the new system
+#+begin_example
+root@freebsd:/zroot/bhyve # cat boot.sh
+bhyve -A -H -P -s 0:0,hostbridge -s 1:0,lpc -s 2:0,virtio-net,tap0 \
+    -s 3:0,virtio-blk,./linux.img -l com1,stdio -c 4 -m 1024M linux
+root@freebsd:/zroot/bhyve #
+#+end_example
+
+
+
+
+**** linux start script with grub-bhyve
+#+begin_example
+#!/bin/sh
+
+grub-bhyve -m device.map -r hd0,gpt2 -M 2048M linux < linux-grub.cfg > /dev/null
+
+bhyve -A -H -P \
+    -s 0:0,hostbridge \
+    -s 1:0,lpc \
+    -s 2:0,virtio-net,tap0 \
+    -s 3:0,virtio-blk,./linux.img \
+    -l com1,stdio \
+    -c 8 \
+    -m 2048M \
+    -u \
+    linux
+#+end_example
+
+device.map
+#+begin_example
+(hd0) ./linux.img
+(cd0) ./ubuntu-22.04.4-live-server-amd64.iso
+#+end_example
+
+linux-grub.cfg
+#+begin_example
+linux (hd0,gpt2)/vmlinuz-5.15.0-122-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv
+initrd (hd0,gpt2)/initrd.img-5.15.0-122-generic
+boot
+#+end_example
+
+
+**** linux start script  with UEFI
+#+begin_example
+bhyve -AHP \
+      -s 0:0,hostbridge \
+      -s 1:0,lpc \
+      -s 2:0,virtio-net,tap1 \
+      -s 3:0,virtio-blk,/dev/zvol/zroot/rheldisc0 \
+      -s 4:0,ahci-cd,./rhel-8.10-x86_64-dvd.iso \
+      -c 4 \
+      -m 2048M \
+      -u \
+      -s 29,fbuf,password="PASSWORDHERE",tcp=0.0.0.0:5900 \
+      -s 30,xhci,tablet \
+      -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,./BHYVE_UEFI_VARS.fd \
+      rhel
+#+end_example
+
+*** OpenBSD Guest Creation
+
+**** Download OpenBSD
+
+
+Download OpenBSD, in this case "install76.iso":
+https://www.openbsd.org/faq/faq4.html#Download
+
+#+begin_example
+user@localhost ~/Downloads % fetch https://cdn.openbsd.org/pub/OpenBSD/7.6/amd64/SHA256
+SHA256                                                2172  B   11 MBps    00s
+user@localhost ~/Downloads % shasum -c SHA256 install76.iso 2>/dev/null | grep OK
+install76.iso: OK
+install76.iso: OK
+user@localhost ~/Downloads %
+#+end_example
+
+
+**** Prepare ZFS datasets
+
+#+begin_example
+# zfs create zroot/bhyve
+#+end_example
+
+#+begin_example
+# zfs create -V32G -o volmode=dev zroot/openbsd01
+#+end_example
+
+
+**** Boot system with UEFI Firmware
+
+
+Install sysutils/bhyve-firmware port or package.
+
+Create a per-guest-copy of the variables template file:
+#+begin_example
+# cp /usr/local/share/uefi-firmware/BHYVE_UEFI_VARS.fd /zroot/bhyve/openbsd/BHYVE_UEFI_VARS.fd
+#+end_example
+
+
+and add the variables file to the bhyve arguments:
+
+#+begin_example
+# bhyve -AHP -s 0:0,hostbridge \
+        -s 1:0,lpc \
+  	-s 2:0,virtio-net,tap1 \
+        -s 3:0,virtio-blk,/dev/zvol/zroot/openbsd01 \
+	-s 4:0,ahci-cd,./install76.iso \
+        -c 4 \
+        -m 1024M \
+	-l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,/zroot/bhyve/openbsd/BHYVE_UEFI_VARS.fd \
+	opensbsd
+#+end_example
+
+enable VNC access:
+#+begin_example
+# bhyve -AHP -s 0:0,hostbridge \
+        -s 1:0,lpc \
+  	-s 2:0,virtio-net,tap1 \
+        -s 3:0,virtio-blk,/dev/zvol/zroot/openbsd01 \
+	-s 4:0,ahci-cd,./install76.iso \
+        -c 4 \
+        -m 1024M \
+	-l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,/zroot/bhyve/openbsd/BHYVE_UEFI_VARS.fd \
+        -s 29,fbuf,password="PASSWORDHERE",tcp=0.0.0.0:5900 \
+	opensbsd
+#+end_example
+
+** Start VMs when FreeBSD Host boots
+
+crontab
+#+begin_example
+root@freebsd:~ # crontab -l
+@reboot /zroot/bhyve/linux-nat.sh
+@reboot cd /zroot/bhyve/ubuntu; /usr/local/bin/tmux new-session -d -s "ubuntu" /zroot/bhyve/ubuntu/linux-start.sh
+root@freebsd:~ #
+#+end_example
+
+/zroot/bhyve/linux-nat.sh
+#+begin_example
+root@freebsd:~ # cat /zroot/bhyve/linux-nat.sh
+#!/bin/sh
+
+ifconfig bridge create name brnat up
+ifconfig tap create up
+ifconfig tap create up
+ifconfig brnat addm tap0
+ifconfig brnat addm tap1
+ifconfig brnat inet 10.0.0.1/24
+root@freebsd:~ #
+#+end_example
