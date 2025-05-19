@@ -2,7 +2,7 @@
 
 #+begin_export html
 <div class="lang">
-<li><a href="thinjails.html">en</a>&nbsp;</li>
+<li><a href="poudriere-repo-in-jail.html">en</a>&nbsp;</li>
 <li> | <a href="/it/FreeBSD/poudriere-repo-in-jail.html">it</a></li>
 </div>
 #+end_export
