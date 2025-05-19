@@ -19,6 +19,7 @@
 
 
 #+TITLE: FreeBSD as a Host with bhyve
+#+OPTIONS: title:nil
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
