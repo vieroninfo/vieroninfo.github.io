@@ -63,6 +63,14 @@ to load the kernel module without rebooting issue the following command
 root@freebsd:~ # kldload vmm
 #+end_example
 
+
+*** 3. Create bhyve directory structure
+
+For ZFS
+#+begin_example
+zfs create zroot/bhyve
+#+end_example
+
 ** Configure bhyve Networking
 [[https://empt1e.blogspot.com/2016/10/bhyve-networking-options.html][Roma's Blog on bhyve Networking Options]]
 *** NAT (Option 1)
@@ -144,21 +152,70 @@ bhyve -A -H -P \
 
 
 ** Create Guest VMs
+
 *** Linux Guest Creation
 
-Note: considering booting the virtual machine with UEFI instead of grub-bhyve.
-
-Create a disk image with truncate
-#+begin_example
-root@freebsd:~ # zfs create zroot/bhyve
-root@freebsd:~ # cp linux.iso /zroot/bhyve/
-root@freebsd:~ # truncate -s 16G linux.img
-#+end_example
-
-or a ZFS volume
+Create a ZFS volume
 #+begin_example
 # zfs create -V16G -o volmode=dev zroot/linuxdisk0
 #+end_example
+
+or a disk image with truncate
+#+begin_example
+root@freebsd:~ # truncate -s 16G linux.img
+#+end_example
+
+
+**** Create Linux Guest with UEFI firmware
+
+Install sysutils/bhyve-firmware
+
+Create a per-guest-copy of the variables template file:
+#+begin_example
+# cp /usr/local/share/uefi-firmware/BHYVE_UEFI_VARS.fd /path/to/vm-image/BHYVE_UEFI_VARS.fd
+#+end_example
+
+
+Create a bhyve boot script:
+#+begin_example
+cat start-linux.sh
+bhyve -AHP \
+      -s 0:0,hostbridge \
+      -s 1:0,lpc \
+      -s 2:0,virtio-net,tap1 \
+      -s 3:0,virtio-blk,/dev/zvol/zroot/rheldisc0 \
+      -s 4:0,ahci-cd,./rhel-8.10-x86_64-dvd.iso \
+      -c 4 \
+      -m 2048M \
+      -u \
+      -s 29,fbuf,password="PASSWORDHERE",tcp=0.0.0.0:5900 \
+      -s 30,xhci,tablet \
+      -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,./BHYVE_UEFI_VARS.fd \
+      rhel
+#+end_example
+
+Start the VM.
+
+#+begin_example
+# ./start-linux.sh
+#+end_example
+
+
+Stop the VM when needed:
+#+begin_example
+# cat ./destroy.sh
+bhyvectl --destroy --vm=debian1
+#+end_example
+
+
+
+
+**** Boot Linux with sysutils/grub2-bhyve port
+
+
+Install sysutils/grub2-bhyve port.
+
+
 
 Create a device.map that grub will use to map the virtual devices to the files on the host system:
 #+begin_example
@@ -169,25 +226,32 @@ root@freebsd:/zroot/bhyve #
 #+end_example
 
 
-Use sysutils/grub2-bhyve to load the Linux® kernel from the ISO image:
+1. Use sysutils/grub2-bhyve to load the Linux® kernel from the ISO image:
 #+begin_example
 root@freebsd:/zroot/bhyve # grub-bhyve -m device.map -r cd0 -M 1024M linux
 #+end_example
 
-Now that the Linux® kernel is loaded, the guest can be started:
+2. Now that the Linux® kernel is loaded, the guest can be started:
 #+begin_example
-root@freebsd:/zroot/bhyve # bhyve -A -H -P -s 0:0,hostbridge -s 1:0,lpc -s 2:0,virtio-net,tap0 -s 3:0,virtio-blk,./linux.img \
-    -s 4:0,ahci-cd,./ubuntu-22.04.4-live-server-amd64.iso -l com1,stdio -c 4 -m 1024M linux
+root@freebsd:/zroot/bhyve # bhyve -A -H -P \
+    -s 0:0,hostbridge \
+    -s 1:0,lpc \
+    -s 2:0,virtio-net,tap0 \
+    -s 3:0,virtio-blk,./linux.img \
+    -s 4:0,ahci-cd,./ubuntu-22.04.4-live-server-amd64.iso \
+    -l com1,stdio \
+    -c 4 \
+    -m 1024M linux
 #+end_example
 
-The system will boot and start the installer. After installing a system in the virtual machine, reboot the virtual machine. This will cause bhyve to exit. The instance of the virtual machine needs to be destroyed before it can be started again:
+3. The system will boot and start the installer. After installing a system in the virtual machine, reboot the virtual machine. This will cause bhyve to exit. The instance of the virtual machine needs to be destroyed before it can be started again:
 
 
 #+begin_example
 root@freebsd:~ # bhyvectl --destroy --vm=linux
 #+end_example
 
-Intermediate step
+4 (a). Now the guest can be started directly from the virtual disk. Load the kernel:
 #+begin_example
 grub> ls
 (hd0) (hd0,gpt3) (hd0,gpt2) (hd0,gpt1) (cd0) (cd0,gpt3) (cd0,gpt2) (cd0,gpt1) (host) (lvm/ubuntu--vg-ubuntu--lv)
@@ -196,22 +260,34 @@ lost+found/ grub/ config-5.15.0-94-generic initrd.img.old vmlinuz.old System.map
 vmlinuz initrd.img-5.15.0-94-generic
 grub> linux (hd0,gpt2)/vmlinuz-5.15.0-94-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv
 grub> initrd (hd0,gpt2)/initrd.img-5.15.0-94-generic
-grub>
+grub> boot
 #+end_example
 
 
-Boot the new system
+4 (b). Boot the new system
 #+begin_example
 root@freebsd:/zroot/bhyve # cat boot.sh
-bhyve -A -H -P -s 0:0,hostbridge -s 1:0,lpc -s 2:0,virtio-net,tap0 \
-    -s 3:0,virtio-blk,./linux.img -l com1,stdio -c 4 -m 1024M linux
+bhyve -A -H -P \
+    -s 0:0,hostbridge \
+    -s 1:0,lpc \
+    -s 2:0,virtio-net,tap0 \
+    -s 3:0,virtio-blk,./linux.img \
+    -l com1,stdio \
+    -c 4 \
+    -m 1024M \
+    -u \
+    linux
 root@freebsd:/zroot/bhyve #
 #+end_example
 
+When finished reboot and destroy:
+#+begin_example
+guestvm# reboot
+bhyvehost# bhyvectl --destroy --vm=debian
+#+end_example
 
 
-
-**** linux start script with grub-bhyve
+5. Create a start script which automatically loads the kernel (4 a.) and boots the VM (4 b.):
 #+begin_example
 #!/bin/sh
 
@@ -243,22 +319,6 @@ boot
 #+end_example
 
 
-**** linux start script  with UEFI
-#+begin_example
-bhyve -AHP \
-      -s 0:0,hostbridge \
-      -s 1:0,lpc \
-      -s 2:0,virtio-net,tap1 \
-      -s 3:0,virtio-blk,/dev/zvol/zroot/rheldisc0 \
-      -s 4:0,ahci-cd,./rhel-8.10-x86_64-dvd.iso \
-      -c 4 \
-      -m 2048M \
-      -u \
-      -s 29,fbuf,password="PASSWORDHERE",tcp=0.0.0.0:5900 \
-      -s 30,xhci,tablet \
-      -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,./BHYVE_UEFI_VARS.fd \
-      rhel
-#+end_example
 
 *** OpenBSD Guest Creation
 
@@ -289,44 +349,6 @@ user@localhost ~/Downloads %
 #+end_example
 
 
-**** Boot system with UEFI Firmware
-
-
-Install sysutils/bhyve-firmware port or package.
-
-Create a per-guest-copy of the variables template file:
-#+begin_example
-# cp /usr/local/share/uefi-firmware/BHYVE_UEFI_VARS.fd /zroot/bhyve/openbsd/BHYVE_UEFI_VARS.fd
-#+end_example
-
-
-and add the variables file to the bhyve arguments:
-
-#+begin_example
-# bhyve -AHP -s 0:0,hostbridge \
-        -s 1:0,lpc \
-  	-s 2:0,virtio-net,tap1 \
-        -s 3:0,virtio-blk,/dev/zvol/zroot/openbsd01 \
-	-s 4:0,ahci-cd,./install76.iso \
-        -c 4 \
-        -m 1024M \
-	-l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,/zroot/bhyve/openbsd/BHYVE_UEFI_VARS.fd \
-	opensbsd
-#+end_example
-
-enable VNC access:
-#+begin_example
-# bhyve -AHP -s 0:0,hostbridge \
-        -s 1:0,lpc \
-  	-s 2:0,virtio-net,tap1 \
-        -s 3:0,virtio-blk,/dev/zvol/zroot/openbsd01 \
-	-s 4:0,ahci-cd,./install76.iso \
-        -c 4 \
-        -m 1024M \
-	-l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd,/zroot/bhyve/openbsd/BHYVE_UEFI_VARS.fd \
-        -s 29,fbuf,password="PASSWORDHERE",tcp=0.0.0.0:5900 \
-	opensbsd
-#+end_example
 
 ** Start VMs when FreeBSD Host boots
 
