@@ -27,8 +27,6 @@
 
 
 @@html:<h1 style="text-align: center;">@@FreeBSD as a Host with bhyve@@html:</h1>@@
-@@html:<h3 style="text-align: center;">@@WARNING: the following are my personal notes. Use at your own risk!@@html:</h3>@@
-
 
 ** Prepare the Host
 

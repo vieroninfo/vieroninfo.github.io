@@ -27,9 +27,6 @@
 #+OPTIONS: toc:nil
 
 @@html:<h1 style="text-align: center;">@@Utilizzare i repository poudriere dell'Host FreeBSD all'interno di una jail@@html:</h1>@@
-@@html:<h3 style="text-align: center;">@@ATTENZIONE: i seguenti sono miei appunti personali. Usateli a vostro rischio e pericolo!@@html:</h3>@@
-
-
 
 Crea mountpoint per la jail dall'Host FreeBSD (oppure da dentro la jail):
 #+begin_example

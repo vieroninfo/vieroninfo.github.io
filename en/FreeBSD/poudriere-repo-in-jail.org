@@ -27,8 +27,6 @@
 #+OPTIONS: toc:nil
 
 @@html:<h1 style="text-align: center;">@@Use FreeBSD Host poudriere repositories inside a jail@@html:</h1>@@
-@@html:<h3 style="text-align: center;">@@WARNING: the following are my personal notes. Use at your own risk!@@html:</h3>@@
-
 
 
 Create jail mountpoint from FreeBSD Host (or inside jail):

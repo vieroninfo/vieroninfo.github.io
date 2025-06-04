@@ -26,8 +26,6 @@
 #+OPTIONS: toc:nil
 
 @@html:<h1 style="text-align: center;">@@Create jail clones from OpenZFS snapshots@@html:</h1>@@
-@@html:<h3 style="text-align: center;">@@WARNING: the following are my personal notes. Use at your own risk!@@html:</h3>@@
-
 
 
 * Creating a Thin Jail Using OpenZFS Snapshots

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-06-04 Wed 14:54 -->
+<!-- 2025-06-04 Wed 15:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>FreeBSD as a Host with bhyve</title>
@@ -212,23 +212,22 @@
 
 <p>
 <h1 style="text-align: center;">FreeBSD as a Host with bhyve</h1>
-<h3 style="text-align: center;">WARNING: the following are my personal notes. Use at your own risk!</h3>
 </p>
-<div id="outline-container-org430daf5" class="outline-2">
-<h2 id="org430daf5"><span class="section-number-2">1.</span> Prepare the Host</h2>
+<div id="outline-container-org68d22e5" class="outline-2">
+<h2 id="org68d22e5"><span class="section-number-2">1.</span> Prepare the Host</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://docs.freebsd.org/en/books/handbook/virtualization/#virtualization-host-bhyve">23.6. FreeBSD as a Host with bhyve</a>
 </p>
 </div>
-<div id="outline-container-orgf038025" class="outline-3">
-<h3 id="orgf038025"><span class="section-number-3">1.1.</span> 1. Check processor support for bhyve module</h3>
+<div id="outline-container-orga404cca" class="outline-3">
+<h3 id="orga404cca"><span class="section-number-3">1.1.</span> 1. Check processor support for bhyve module</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Check if the processor supports bhyve is to run dmesg or look in /var/run/dmesg.boot for the POPCNT processor feature flag on the Features2 line for AMD® processors or EPT and UG on the VT-x line for Intel® processors.
 </p>
 
-<pre class="example" id="org46883dc">
+<pre class="example" id="orge10e96c">
 root@freebsd:~ # dmesg | egrep 'EPT|UG' --color
   VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
   VT-x: PAT,HLT,MTF,PAUSE,EPT,UG,VPID
@@ -241,13 +240,13 @@ root@freebsd:~ #
 </pre>
 </div>
 </div>
-<div id="outline-container-orgf4def4d" class="outline-3">
-<h3 id="orgf4def4d"><span class="section-number-3">1.2.</span> 2. Load the module</h3>
+<div id="outline-container-org55b37db" class="outline-3">
+<h3 id="org55b37db"><span class="section-number-3">1.2.</span> 2. Load the module</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 added following lines to /boot/loader.conf on FreeBSD host
 </p>
-<pre class="example" id="org7d24013">
+<pre class="example" id="org9702cfe">
 # needed for virtualization support
 vmm_load="YES"
 </pre>
@@ -255,37 +254,37 @@ vmm_load="YES"
 <p>
 to load the kernel module without rebooting issue the following command
 </p>
-<pre class="example" id="org61c1b9e">
+<pre class="example" id="org42db012">
 root@freebsd:~ # kldload vmm
 </pre>
 </div>
 </div>
-<div id="outline-container-org0f696a5" class="outline-3">
-<h3 id="org0f696a5"><span class="section-number-3">1.3.</span> 3. Create bhyve directory structure</h3>
+<div id="outline-container-org4efc8da" class="outline-3">
+<h3 id="org4efc8da"><span class="section-number-3">1.3.</span> 3. Create bhyve directory structure</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 For ZFS
 </p>
-<pre class="example" id="org76ee171">
+<pre class="example" id="orgff6e860">
 zfs create zroot/bhyve
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org609fada" class="outline-2">
-<h2 id="org609fada"><span class="section-number-2">2.</span> Configure bhyve Networking</h2>
+<div id="outline-container-org7d2ece9" class="outline-2">
+<h2 id="org7d2ece9"><span class="section-number-2">2.</span> Configure bhyve Networking</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="https://empt1e.blogspot.com/2016/10/bhyve-networking-options.html">Roma's Blog on bhyve Networking Options</a>
 </p>
 </div>
-<div id="outline-container-orgbd24b95" class="outline-3">
-<h3 id="orgbd24b95"><span class="section-number-3">2.1.</span> NAT (Option 1)</h3>
+<div id="outline-container-orgb672396" class="outline-3">
+<h3 id="orgb672396"><span class="section-number-3">2.1.</span> NAT (Option 1)</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Create single bridge and add a separate tap device for each Guest VMs:
 </p>
-<pre class="example" id="orgacf4a9f">
+<pre class="example" id="org58b147c">
 root@freebsd:~ # ifconfig bridge create name brnat up
 brnat
 root@freebsd:~ # ifconfig tap create up
@@ -298,7 +297,7 @@ root@freebsd:~ # ifconfig brnat inet 10.0.0.1/24
 <p>
 added to /etc/pf.conf
 </p>
-<pre class="example" id="org9a178a4">
+<pre class="example" id="org61c1209">
 virt_net="10.0.0.0/24"
 set skip on brnat
 nat on $ext_if from $virt_net to any -&gt; ($ext_if)
@@ -307,7 +306,7 @@ nat on $ext_if from $virt_net to any -&gt; ($ext_if)
 <p>
 Enable ip forwarding
 </p>
-<pre class="example" id="orgbc99d62">
+<pre class="example" id="orge2d85b0">
 root@freebsd:~ # sysctl net.inet.ip.forwarding
 net.inet.ip.forwarding: 1
 root@freebsd:~ #
@@ -316,7 +315,7 @@ root@freebsd:~ #
 <p>
 Assign ip to bridge
 </p>
-<pre class="example" id="orgd0583b6">
+<pre class="example" id="org7675fce">
 root@freebsd:~ # ifconfig brnat inet 10.0.0.1/24
 </pre>
 
@@ -325,14 +324,14 @@ An IP can then be assigned to the Guest VM from the 10.0.0.0/24 network and the 
 </p>
 </div>
 </div>
-<div id="outline-container-org0019f02" class="outline-3">
-<h3 id="org0019f02"><span class="section-number-3">2.2.</span> Passthrough (Option 2)</h3>
+<div id="outline-container-org2536e83" class="outline-3">
+<h3 id="org2536e83"><span class="section-number-3">2.2.</span> Passthrough (Option 2)</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <a href="https://wiki.freebsd.org/bhyve/pci_passthru">FreeBSD Wiki - bhyve PCI Passthrough</a>
 </p>
 
-<pre class="example" id="org8205a8b">
+<pre class="example" id="orgb02c1c9">
 root@freebsd:/zroot/bhyve # pciconf -lv vmx1
 vmx1@pci0:19:0:0:       class=0x020000 rev=0x01 hdr=0x00 vendor=0x15ad device=0x07b0 subvendor=0x15ad subdevice=0x07b0
     vendor     = 'VMware'
@@ -345,14 +344,14 @@ root@freebsd:/zroot/bhyve #
 <p>
 add following to /boot/loader.conf and reboot
 </p>
-<pre class="example" id="org2200c26">
+<pre class="example" id="org0679977">
 pptdevs="19/0/0"
 </pre>
 
 <p>
 add to bhyve config
 </p>
-<pre class="example" id="orgd36fcb1">
+<pre class="example" id="org615cfea">
 bhyve -A -H -P \
 -s 0:0,hostbridge \
 -s 1:0,lpc \
@@ -365,29 +364,29 @@ bhyve -A -H -P \
 </div>
 </div>
 </div>
-<div id="outline-container-org4337ba0" class="outline-2">
-<h2 id="org4337ba0"><span class="section-number-2">3.</span> Create Guest VMs</h2>
+<div id="outline-container-org8866868" class="outline-2">
+<h2 id="org8866868"><span class="section-number-2">3.</span> Create Guest VMs</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org5d574ab" class="outline-3">
-<h3 id="org5d574ab"><span class="section-number-3">3.1.</span> Create ZFS volume or disk image</h3>
+<div id="outline-container-orged78c76" class="outline-3">
+<h3 id="orged78c76"><span class="section-number-3">3.1.</span> Create ZFS volume or disk image</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Create a ZFS volume
 </p>
-<pre class="example" id="orga923ee9">
+<pre class="example" id="org5feaff4">
 # zfs create -V16G -o volmode=dev zroot/linuxdisk0
 </pre>
 
 <p>
 or a disk image with truncate
 </p>
-<pre class="example" id="org55c3fcd">
+<pre class="example" id="orgf512cb8">
 root@freebsd:~ # truncate -s 16G linux.img
 </pre>
 </div>
-<div id="outline-container-org0e2de12" class="outline-4">
-<h4 id="org0e2de12"><span class="section-number-4">3.1.1.</span> For UEFI based VMs (Option 1)</h4>
+<div id="outline-container-org1a525c6" class="outline-4">
+<h4 id="org1a525c6"><span class="section-number-4">3.1.1.</span> For UEFI based VMs (Option 1)</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Install sysutils/bhyve-firmware
@@ -396,7 +395,7 @@ Install sysutils/bhyve-firmware
 <p>
 Create a per-guest-copy of the variables template file:
 </p>
-<pre class="example" id="org2549171">
+<pre class="example" id="org56dd0ac">
 # cp /usr/local/share/uefi-firmware/BHYVE_UEFI_VARS.fd /path/to/vm-image/BHYVE_UEFI_VARS.fd
 </pre>
 
@@ -404,7 +403,7 @@ Create a per-guest-copy of the variables template file:
 <p>
 Create a bhyve boot script:
 </p>
-<pre class="example" id="org9083551">
+<pre class="example" id="orge4fd67d">
 cat start-linux.sh
 bhyve -AHP \
       -s 0:0,hostbridge \
@@ -425,7 +424,7 @@ bhyve -AHP \
 Start the VM.
 </p>
 
-<pre class="example" id="org9969ecd">
+<pre class="example" id="orgdc4b3d7">
 # ./start-linux.sh
 </pre>
 
@@ -433,14 +432,14 @@ Start the VM.
 <p>
 Stop the VM when needed:
 </p>
-<pre class="example" id="org6ecb33b">
+<pre class="example" id="org099d7ed">
 # cat ./destroy.sh
 bhyvectl --destroy --vm=debian1
 </pre>
 </div>
 </div>
-<div id="outline-container-orgb3d08bb" class="outline-4">
-<h4 id="orgb3d08bb"><span class="section-number-4">3.1.2.</span> Booting with GRUB (Option 2)</h4>
+<div id="outline-container-orge560a76" class="outline-4">
+<h4 id="orge560a76"><span class="section-number-4">3.1.2.</span> Booting with GRUB (Option 2)</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Install sysutils/grub2-bhyve port.
@@ -451,7 +450,7 @@ Install sysutils/grub2-bhyve port.
 <p>
 Create a device.map that grub will use to map the virtual devices to the files on the host system:
 </p>
-<pre class="example" id="org1fbab4d">
+<pre class="example" id="orgdc1a5d9">
 root@freebsd:/zroot/bhyve # cat device.map
 (hd0) ./linux.img
 (cd0) ./ubuntu-22.04.4-live-server-amd64.iso
@@ -462,14 +461,14 @@ root@freebsd:/zroot/bhyve #
 <ol class="org-ol">
 <li>Use sysutils/grub2-bhyve to load the Linux® kernel from the ISO image:</li>
 </ol>
-<pre class="example" id="org7b54486">
+<pre class="example" id="orgcf4c7bf">
 root@freebsd:/zroot/bhyve # grub-bhyve -m device.map -r cd0 -M 1024M linux
 </pre>
 
 <ol class="org-ol">
 <li>Now that the Linux® kernel is loaded, the guest can be started:</li>
 </ol>
-<pre class="example" id="orgd5ba3ad">
+<pre class="example" id="orgeccd9bf">
 root@freebsd:/zroot/bhyve # bhyve -A -H -P \
     -s 0:0,hostbridge \
     -s 1:0,lpc \
@@ -486,14 +485,14 @@ root@freebsd:/zroot/bhyve # bhyve -A -H -P \
 </ol>
 
 
-<pre class="example" id="orgb997137">
+<pre class="example" id="orgab2ae68">
 root@freebsd:~ # bhyvectl --destroy --vm=linux
 </pre>
 
 <p>
 4 (a). Now the guest can be started directly from the virtual disk. Load the kernel:
 </p>
-<pre class="example" id="org271b72f">
+<pre class="example" id="org52715eb">
 grub&gt; ls
 (hd0) (hd0,gpt3) (hd0,gpt2) (hd0,gpt1) (cd0) (cd0,gpt3) (cd0,gpt2) (cd0,gpt1) (host) (lvm/ubuntu--vg-ubuntu--lv)
 grub&gt; ls (hd0,gpt2)/
@@ -508,7 +507,7 @@ grub&gt; boot
 <p>
 4 (b). Boot the new system
 </p>
-<pre class="example" id="orgadc151e">
+<pre class="example" id="org1a50781">
 root@freebsd:/zroot/bhyve # cat boot.sh
 bhyve -A -H -P \
     -s 0:0,hostbridge \
@@ -526,7 +525,7 @@ root@freebsd:/zroot/bhyve #
 <p>
 When finished reboot and destroy:
 </p>
-<pre class="example" id="orgbe05ad4">
+<pre class="example" id="orgd87ffe8">
 guestvm# reboot
 bhyvehost# bhyvectl --destroy --vm=debian
 </pre>
@@ -535,7 +534,7 @@ bhyvehost# bhyvectl --destroy --vm=debian
 <ol class="org-ol">
 <li>Create a start script which automatically loads the kernel (4 a.) and boots the VM (4 b.):</li>
 </ol>
-<pre class="example" id="org734b598">
+<pre class="example" id="org104dcb4">
 #!/bin/sh
 
 grub-bhyve -m device.map -r hd0,gpt2 -M 2048M linux &lt; linux-grub.cfg &gt; /dev/null
@@ -555,7 +554,7 @@ bhyve -A -H -P \
 <p>
 device.map
 </p>
-<pre class="example" id="orgce71507">
+<pre class="example" id="orgf28dd66">
 (hd0) ./linux.img
 (cd0) ./ubuntu-22.04.4-live-server-amd64.iso
 </pre>
@@ -563,7 +562,7 @@ device.map
 <p>
 linux-grub.cfg
 </p>
-<pre class="example" id="org0aae73f">
+<pre class="example" id="org30c5198">
 linux (hd0,gpt2)/vmlinuz-5.15.0-122-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv
 initrd (hd0,gpt2)/initrd.img-5.15.0-122-generic
 boot
@@ -572,13 +571,13 @@ boot
 </div>
 </div>
 </div>
-<div id="outline-container-orge64737e" class="outline-2">
-<h2 id="orge64737e"><span class="section-number-2">4.</span> Start VMs when FreeBSD Host boots</h2>
+<div id="outline-container-orgab7f03b" class="outline-2">
+<h2 id="orgab7f03b"><span class="section-number-2">4.</span> Start VMs when FreeBSD Host boots</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 crontab
 </p>
-<pre class="example" id="org906bb05">
+<pre class="example" id="org8c48461">
 root@freebsd:~ # crontab -l
 @reboot /zroot/bhyve/linux-nat.sh
 @reboot cd /zroot/bhyve/ubuntu; /usr/local/bin/tmux new-session -d -s "ubuntu" /zroot/bhyve/ubuntu/linux-start.sh
@@ -588,7 +587,7 @@ root@freebsd:~ #
 <p>
 /zroot/bhyve/linux-nat.sh
 </p>
-<pre class="example" id="org62bd0cf">
+<pre class="example" id="orga733fa6">
 root@freebsd:~ # cat /zroot/bhyve/linux-nat.sh
 #!/bin/sh
 
@@ -609,7 +608,7 @@ root@freebsd:~ #
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2025-06-04 Wed 14:54</p>
+<p class="date">Created: 2025-06-04 Wed 15:02</p>
 </div>
 </body>
 </html>

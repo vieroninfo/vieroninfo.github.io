@@ -27,10 +27,6 @@
 #+OPTIONS: toc:nil
 
 @@html:<h1 style="text-align: center;">@@Crea repository basati su git poudriere@@html:</h1>@@
-@@html:<h3 style="text-align: center;">@@
-
-ATTENZIONE: i seguenti sono miei appunti personali. Usateli a vostro rischio e pericolo@@html:</h3>@@
-
 
 
 * Installa e configura Poudriere
