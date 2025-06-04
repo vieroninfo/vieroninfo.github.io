@@ -153,7 +153,7 @@ bhyve -A -H -P \
 
 ** Create Guest VMs
 
-*** Linux Guest Creation
+*** Create ZFS volume or disk image
 
 Create a ZFS volume
 #+begin_example
@@ -166,7 +166,7 @@ root@freebsd:~ # truncate -s 16G linux.img
 #+end_example
 
 
-**** Create Linux Guest with UEFI firmware
+**** For UEFI based VMs (Option 1)
 
 Install sysutils/bhyve-firmware
 
@@ -210,7 +210,7 @@ bhyvectl --destroy --vm=debian1
 
 
 
-**** Boot Linux with sysutils/grub2-bhyve port
+**** Booting with GRUB (Option 2)
 
 
 Install sysutils/grub2-bhyve port.
@@ -317,37 +317,6 @@ linux (hd0,gpt2)/vmlinuz-5.15.0-122-generic root=/dev/mapper/ubuntu--vg-ubuntu--
 initrd (hd0,gpt2)/initrd.img-5.15.0-122-generic
 boot
 #+end_example
-
-
-
-*** OpenBSD Guest Creation
-
-**** Download OpenBSD
-
-
-Download OpenBSD, in this case "install76.iso":
-https://www.openbsd.org/faq/faq4.html#Download
-
-#+begin_example
-user@localhost ~/Downloads % fetch https://cdn.openbsd.org/pub/OpenBSD/7.6/amd64/SHA256
-SHA256                                                2172  B   11 MBps    00s
-user@localhost ~/Downloads % shasum -c SHA256 install76.iso 2>/dev/null | grep OK
-install76.iso: OK
-install76.iso: OK
-user@localhost ~/Downloads %
-#+end_example
-
-
-**** Prepare ZFS datasets
-
-#+begin_example
-# zfs create zroot/bhyve
-#+end_example
-
-#+begin_example
-# zfs create -V32G -o volmode=dev zroot/openbsd01
-#+end_example
-
 
 
 ** Start VMs when FreeBSD Host boots
