@@ -45,12 +45,6 @@ Per abilitare ccache scommentare ~"#CCACHE_DIR=/var/cache/ccache"~
 
 * Buildare con Poudriere
 
-** Imposta un proxy per l'uso di git (OPZIONALE)
-#+begin_example
-# git config --global https.proxy http://localhost:8080
-# git config --global http.proxy http://localhost:8080
-#+end_example
-
 ** Clona un repository
 
 #+begin_export html

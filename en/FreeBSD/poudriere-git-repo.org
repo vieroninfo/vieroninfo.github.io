@@ -44,11 +44,6 @@ To enable ccache uncomment ~"#CCACHE_DIR=/var/cache/ccache"~
 
 * Building with Poudriere
 
-** Set git proxy (OPTIONAL)
-#+begin_example
-# git config --global https.proxy http://localhost:8080
-# git config --global http.proxy http://localhost:8080
-#+end_example
 
 ** Clone a repository
 
