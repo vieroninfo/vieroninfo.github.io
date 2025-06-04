@@ -12,7 +12,7 @@
 
 
 * Personal notes on FreeBSD and related technologies
-** Poudriere
+** Create repositories with poudriere 
 
 #+begin_export html
 <p><a href="en/FreeBSD/poudriere-git-repo.html">Create poudriere git based repositories</a></p>
@@ -20,13 +20,13 @@
 
 
 
-** Jails
+** Create jail containers
 #+begin_export html
 <p><a href="en/FreeBSD/thinjails.html">Create jail clones from OpenZFS snapshots</a></p>
 <p><a href="en/FreeBSD/poudriere-repo-in-jail.html">Use poudriere repositories inside a jail</a></p>
 #+end_export
 
-** bhyve
+** Create bhyve VMs
 
 #+begin_export html
 <p><a href="en/FreeBSD/bhyve.html">FreeBSD as a Host with bhyve</a></p>
@@ -46,19 +46,19 @@
 
 * Note personali su FreeBSD e tecnologie correlate
 
-** Poudriere
+** Creare repositori con poudriere
 #+begin_export html
 <p><a href="it/FreeBSD/poudriere-git-repo.html">Creare repository git basate su poudriere</a></p>
 #+end_export
 
 
-** Jail
+** Creare container jail
 #+begin_export html
 <p><a href="it/FreeBSD/thinjails.html">Creare jail clone tramite snapshot OpenZFS</a></p>
 <p><a href="it/FreeBSD/poudriere-repo-in-jail.html">Usare repository poudriere dentro la jail</a></p>
 #+end_export
 
-** bhyve
+** Creare VM con bhyve
 
 #+begin_export html
 <p><a href="it/FreeBSD/bhyve.html">FreeBSD as a Host with bhyve</a></p>
