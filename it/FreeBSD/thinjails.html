@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-06-04 Wed 15:02 -->
+<!-- 2025-06-04 Wed 15:22 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Crea cloni di jail da snapshot OpenZFS</title>
@@ -213,15 +213,15 @@
 <p>
 <h1 style="text-align: center;">Crea cloni di jail da snapshot OpenZFS</h1>
 </p>
-<div id="outline-container-org02e8e58" class="outline-2">
-<h2 id="org02e8e58"><span class="section-number-2">1.</span> Creazione di una thin jail utilizzando gli snapshot OpenZFS</h2>
+<div id="outline-container-orgc5a9696" class="outline-2">
+<h2 id="orgc5a9696"><span class="section-number-2">1.</span> Creazione di una thin jail utilizzando gli snapshot OpenZFS</h2>
 <div class="outline-text-2" id="text-1">
 <p><a href="https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots" target="_blank">https://docs.freebsd.org/en/books/handbook/jails/#creating-thin-jail-openzfs-snapshots</a></p>
 
 <p>
 Avvia tutte le jail configurate all'avvio del sistema:
 </p>
-<pre class="example" id="orgd8bcc06">
+<pre class="example" id="org868301e">
 # sysrc jail_enable="YES"
 # sysrc jail_parallel_start="YES"
 </pre>
@@ -230,20 +230,20 @@ Avvia tutte le jail configurate all'avvio del sistema:
 <p>
 Creare dataset per le directory della prigione:
 </p>
-<pre class="example" id="org51a095f">
+<pre class="example" id="orga7a1d52">
 # zfs create -o mountpoint=/usr/local/jails zroot/jails
 # zfs create zroot/jails/media
 # zfs create zroot/jails/templates
 # zfs create zroot/jails/containers
 </pre>
 </div>
-<div id="outline-container-org198eb58" class="outline-3">
-<h3 id="org198eb58"><span class="section-number-3">1.1.</span> Crea una snapshot ZFS che faccia da jail template</h3>
+<div id="outline-container-org2f0ecfd" class="outline-3">
+<h3 id="org2f0ecfd"><span class="section-number-3">1.1.</span> Crea una snapshot ZFS che faccia da jail template</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Recupera e applica patch alla base, quindi crea uno snapshot per i cloni futuri
 </p>
-<pre class="example" id="org78d8d0f">
+<pre class="example" id="org5c80933">
 # fetch https://download.freebsd.org/ftp/releases/amd64/amd64/13.2-RELEASE/base.txz -o /usr/local/jails/media/13.2-RELEASE-base.txz
 # tar -xf /usr/local/jails/media/13.2-RELEASE-base.txz -C /usr/local/jails/templates/13.2-RELEASE --unlink
 # freebsd-update -b /usr/local/jails/templates/13.2-RELEASE/ fetch install
@@ -251,20 +251,20 @@ Recupera e applica patch alla base, quindi crea uno snapshot per i cloni futuri
 </pre>
 </div>
 </div>
-<div id="outline-container-org68450e9" class="outline-3">
-<h3 id="org68450e9"><span class="section-number-3">1.2.</span> Crea una nuova jail "clone ZFS" dal template</h3>
+<div id="outline-container-org6b0eb6b" class="outline-3">
+<h3 id="org6b0eb6b"><span class="section-number-3">1.2.</span> Crea una nuova jail "clone ZFS" dal template</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Clona dalla snapshot
 </p>
-<pre class="example" id="org60cf7b9">
+<pre class="example" id="org7abe299">
 # zfs clone zroot/jails/templates/13.2-RELEASE@base zroot/jails/containers/thinjail
 </pre>
 
 <p>
 Copia i file di configurazione essenziali (FACOLTATIVO)
 </p>
-<pre class="example" id="orgfd9127e">
+<pre class="example" id="orgcca9d48">
 # cp /etc/resolv.conf /usr/local/jails/containers/thinjail/etc/resolv.conf
 # cp /etc/localtime /usr/local/jails/containers/thinjail/etc/localtime
 </pre>
@@ -272,7 +272,7 @@ Copia i file di configurazione essenziali (FACOLTATIVO)
 <p>
 Creare un file di configurazione jail per la jail appena creata in /etc/jail.conf.d:
 </p>
-<pre class="example" id="org563ed41">
+<pre class="example" id="org207fdc0">
 # ls /etc/jail.conf.d/
 thinjail.conf
 </pre>
@@ -280,14 +280,14 @@ thinjail.conf
 <p>
 Startare la jail:
 </p>
-<pre class="example" id="orge3c4f85">
+<pre class="example" id="orgdd8191b">
 # service jail start thinjail
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgee05812" class="outline-2">
-<h2 id="orgee05812"><span class="section-number-2">2.</span> Aggiornamento della jail</h2>
+<div id="outline-container-orgebbb028" class="outline-2">
+<h2 id="orgebbb028"><span class="section-number-2">2.</span> Aggiornamento della jail</h2>
 <div class="outline-text-2" id="text-2">
 <p><a href="https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading" target="_blank">https://docs.freebsd.org/en/books/handbook/jails/#jail-upgrading</a></p>
 
@@ -298,7 +298,7 @@ Upgrade jail to latest patch release:
 <p>
 Aggiorna la jail all'ultima patch disponibile:
 </p>
-<pre class="example" id="org7d8af25">
+<pre class="example" id="org8169e9d">
 # freebsd-update -j thinjail fetch install
 # service jail restart thinjail
 </pre>
@@ -312,7 +312,7 @@ Aggiorna la jail a una nuova versione major o minor:
 
 <li>poi fare l'upgrade della jail</li>
 </ol>
-<pre class="example" id="org3e76c42">
+<pre class="example" id="org3d567f5">
 # freebsd-update -j thinjail -r 13.2-RELEASE upgrade
 # freebsd-update -j thinjail install
 # service jail restart thinjail
@@ -324,13 +324,13 @@ Aggiorna la jail a una nuova versione major o minor:
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org02e8e58">1. Creazione di una thin jail utilizzando gli snapshot OpenZFS</a>
+<li><a href="#orgc5a9696">1. Creazione di una thin jail utilizzando gli snapshot OpenZFS</a>
 <ul>
-<li><a href="#org198eb58">1.1. Crea una snapshot ZFS che faccia da jail template</a></li>
-<li><a href="#org68450e9">1.2. Crea una nuova jail "clone ZFS" dal template</a></li>
+<li><a href="#org2f0ecfd">1.1. Crea una snapshot ZFS che faccia da jail template</a></li>
+<li><a href="#org6b0eb6b">1.2. Crea una nuova jail "clone ZFS" dal template</a></li>
 </ul>
 </li>
-<li><a href="#orgee05812">2. Aggiornamento della jail</a></li>
+<li><a href="#orgebbb028">2. Aggiornamento della jail</a></li>
 </ul>
 </div>
 </div>
@@ -341,7 +341,7 @@ Aggiorna la jail a una nuova versione major o minor:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2025-06-04 Wed 15:02</p>
+<p class="date">Created: 2025-06-04 Wed 15:22</p>
 </div>
 </body>
 </html>

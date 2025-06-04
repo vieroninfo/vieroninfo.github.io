@@ -65,8 +65,9 @@ root@www:/usr/local/etc/pkg/repos #
 
 pkg update
 root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
-
 #+end_example
+
+#+TOC: headlines N
 
 #+begin_export html
 <hr>

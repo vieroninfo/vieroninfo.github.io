@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-06-04 Wed 15:02 -->
+<!-- 2025-06-04 Wed 15:22 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Utilizzare i repository poudriere dell'Host FreeBSD all'interno di una jail</title>
@@ -218,14 +218,14 @@
 <p>
 Crea mountpoint per la jail dall'Host FreeBSD (oppure da dentro la jail):
 </p>
-<pre class="example" id="org7d5df7f">
+<pre class="example" id="org12c3bec">
 mkdir -p /usr/jails/www/var/ports/packages/
 </pre>
 
 <p>
 Crea file fstab per la jail sull'Host FreeBSD:
 </p>
-<pre class="example" id="orgc7d8da4">
+<pre class="example" id="orgdaf787f">
 # cat /etc/fstab.www
 /usr/local/poudriere/data/packages/13amd64-www-www/ /usr/jails/www/var/ports/packages/ nullfs ro 0 0
 </pre>
@@ -233,7 +233,7 @@ Crea file fstab per la jail sull'Host FreeBSD:
 <p>
 Aggiungere la seguente opzione alla configurazione della jail in /etc/jail.conf.d:
 </p>
-<pre class="example" id="org2765f9b">
+<pre class="example" id="org3fec0aa">
 # grep  fstab www.conf
   mount.fstab = "/etc/fstab.www";
 </pre>
@@ -242,7 +242,7 @@ Aggiungere la seguente opzione alla configurazione della jail in /etc/jail.conf.
 <p>
 Utilizzare il repository montato poudriere all'interno della prigione:
 </p>
-<pre class="example" id="org457c7e0">
+<pre class="example" id="orgc1c36e8">
 mkdir -p /usr/local/etc/pkg/repos
 
 root@www:/usr/local/etc/pkg/repos # cat www.conf
@@ -260,14 +260,13 @@ root@www:/usr/local/etc/pkg/repos #
 
 pkg update
 root@www:~ # pkg install `pkg search -g '*' | awk '{print $1}'`
-
 </pre>
 
 <hr>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://vieron.info">https://vieron.info</a></p>
-<p class="date">Created: 2025-06-04 Wed 15:02</p>
+<p class="date">Created: 2025-06-04 Wed 15:22</p>
 </div>
 </body>
 </html>
