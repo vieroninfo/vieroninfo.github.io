@@ -23,7 +23,6 @@
 #+AUTHOR: https://vieron.info
 # Disable super/subscripting 
 #+OPTIONS: ^:nil
-
 #+OPTIONS: toc:nil
 
 @@html:<h1 style="text-align: center;">@@Use FreeBSD Host poudriere repositories inside a jail@@html:</h1>@@
